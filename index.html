@@ -1,0 +1,548 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <title>Mi Portfolio</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?display=swap&family=Inter:ital,wght@0,300;1,300&family=Manrope:ital,wght@0,400;1,400" rel="stylesheet" type="text/css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth; /* Desplazamiento suave */
+    }
+
+    body {
+      background:
+        url('pattern.svg'),
+        linear-gradient(180deg, #261F33 0%, #000000 100%);
+      background-size: 512px, auto;
+      background-position: center, center;
+      background-repeat: repeat, no-repeat;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: #fff;
+    }
+
+    #main {
+      background: rgba(18, 18, 18, 0.9); /* Fondo semi-transparente para que el SVG sea visible detrás */
+      max-width: 55rem; /* Reducimos el ancho para que más área del SVG sea visible */
+      margin: 0 auto;
+      padding: 2rem 4rem;
+      border-radius: 1px;
+    }
+
+    .profile-container {
+      display: flex;
+      align-items: center;
+      gap: 4rem;
+    }
+
+    .profile-image {
+      width: 300px;
+      border-radius: 100%;
+      border: 1px solid rgba(0,0,0,0.102);
+      padding: 1.75rem;
+      transition: transform 0.3s ease; /* Animación suave al pasar el mouse */
+    }
+
+    .profile-image:hover {
+      transform: scale(1.05); /* Efecto de zoom sutil */
+    }
+
+    .profile-text a {
+      text-decoration: none; /* Quita el subrayado */
+    }
+
+    .profile-text a:hover h3 {
+      text-decoration: underline; /* Opcional: subrayado al pasar el mouse */
+      color: #8E8E8E; /* Opcional: cambia el color al pasar el mouse */
+    }
+
+    .profile-text h3 {
+      text-transform: uppercase;
+      color: #5E5E5E;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.4rem;
+      font-size: 0.75em;
+      line-height: 2.25;
+      font-weight: 300;
+      margin-bottom: 1.75rem;
+    }
+
+    .profile-text h1 {
+      color: #5A4C70;
+      font-family: 'Manrope', sans-serif;
+      letter-spacing: -0.025rem;
+      font-size: 2.625em;
+      line-height: 1.5;
+      font-weight: 400;
+      margin-bottom: 1.75rem;
+    }
+
+    .profile-text p {
+      color: #A0A0A0; /* Mejor contraste que #8E8E8E */
+      font-family: 'Inter', sans-serif;
+      font-size: 1em;
+      line-height: 1.875;
+      font-weight: 300;
+    }
+
+    .artstation-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 2rem auto;
+      padding: 0 1.875rem;
+      height: 3.75rem;
+      background-color: #262626;
+      color: #FFFFFF;
+      text-transform: uppercase;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.4rem;
+      font-size: 0.75em;
+      font-weight: 300;
+      border-radius: 2.5rem;
+      text-decoration: none;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .artstation-button:hover {
+      background-color: rgba(38,38,38,0.89);
+      transform: translateY(-2px); /* Efecto de elevación al pasar el mouse */
+    }
+
+    .artstation-button svg {
+      width: 1.25em;
+      height: 1.25em;
+      margin-right: 0.75rem;
+      fill: #FFFFFF;
+    }
+
+    .artstation-button span {
+      line-height: 1;
+    }
+
+    .home-link {
+      text-align: center; /* Centra el texto horizontalmente */
+      margin-top: 1rem; /* Espacio entre el botón y el enlace */
+    }
+
+    .home-link a {
+      color: #5A4C70; /* Color similar al resto de los enlaces */
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9em;
+      text-decoration: none; /* Quita el subrayado */
+      transition: color 0.3s ease;
+    }
+
+    .home-link a:hover {
+      color: #8E8E8E; /* Cambia de color al pasar el mouse */
+      text-decoration: underline; /* Subrayado al pasar el mouse */
+    }
+
+    /* Estilos para las entradas de blog */
+    .blog-entries {
+      margin-top: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      background: #121212; /* Fondo sólido para las entradas */
+      position: relative;
+      transition: opacity 0.3s ease;
+    }
+
+    .blog-entries.fade {
+      opacity: 0; /* Estado inicial para la animación de fade */
+    }
+
+    .blog-entry {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      text-decoration: none;
+      padding: 1rem;
+      border-radius: 8px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .blog-entry:hover {
+      background-color: rgba(255, 255, 255, 0.05); /* Fondo sutil al pasar el mouse */
+      transform: translateY(-3px); /* Efecto de elevación */
+    }
+
+    .blog-entry:hover .blog-text h2 {
+      text-decoration: underline;
+    }
+
+    .blog-image {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    .blog-entry:hover .blog-image {
+      transform: scale(1.03); /* Zoom sutil en la imagen al pasar el mouse */
+    }
+
+    .blog-text {
+      flex: 1;
+    }
+
+    .blog-text h2 {
+      color: #5A4C70;
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 0.7em;
+      line-height: 1.25;
+      letter-spacing: 0.5em;
+      margin-bottom: 1rem;
+    }
+
+    .blog-text p {
+      color: #A0A0A0; /* Mejor contraste */
+      font-family: 'Inter', sans-serif;
+      font-size: 1em;
+      line-height: 1.875;
+      font-weight: 300;
+    }
+
+    /* Estilo para el spinner de carga */
+    .loading-spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      border-top: 3px solid #5A4C70;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      display: none; /* Oculto por defecto */
+    }
+
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Estilos para la paginación */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .pagination a {
+      color: #5A4C70;
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 1em;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .pagination a:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: #8E8E8E;
+      transform: translateY(-2px);
+    }
+
+    .pagination a.active {
+      background-color: #5A4C70;
+      color: #fff;
+      border-color: #5A4C70;
+    }
+
+    .pagination .prev-arrow,
+    .pagination .next-arrow {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pagination .prev-arrow svg,
+    .pagination .next-arrow svg {
+      width: 12px;
+      height: 12px;
+      fill: #5A4C70;
+      transition: fill 0.3s ease;
+    }
+
+    .pagination .prev-arrow:hover svg,
+    .pagination .next-arrow:hover svg {
+      fill: #8E8E8E;
+    }
+
+    @media (max-width: 736px) {
+      .profile-container {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .profile-image {
+        width: 12rem;
+      }
+
+      .profile-text h3 {
+        letter-spacing: 0.35rem;
+        font-size: 0.75em;
+      }
+
+      .profile-text h1 {
+        letter-spacing: -0.021875rem;
+        font-size: 2.625em;
+      }
+
+      .profile-text p {
+        font-size: 1em;
+      }
+
+      .artstation-button {
+        margin: 1.5rem auto;
+      }
+
+      .blog-entries {
+        padding: 1.5rem;
+      }
+
+      .blog-entry {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .blog-image {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+      }
+
+      .pagination a {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9em;
+      }
+    }
+
+    @media (max-width: 360px) {
+      #main {
+        padding: 3rem 1.5rem;
+      }
+
+      .profile-text h1 {
+        font-size: 2em;
+      }
+
+      .blog-entries {
+        padding: 1rem;
+      }
+
+      .blog-text h2 {
+        font-size: 1.25em;
+      }
+
+      .pagination a {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="main">
+    <div class="profile-container">
+      <img src="A4.png" alt="Perfil" class="profile-image">
+      <div class="profile-text">
+        <a href="index.html">
+        <h3>KUNI'S DEVLOG</h3>
+        </a>
+        <h1>Hi, I'm Alan</h1>
+        <p>DevArtist / 3D Generalist<br/>Blender & Three.js.</p>
+      </div>
+    </div>
+    <a href="http://kuni3d.carrd.co" class="artstation-button">
+
+      <span>Portfolio</span>
+    </a>
+
+    <!-- Texto "Home" que añadiste -->
+    <div class="home-link">
+     <a href="#" class="pagination-link" data-page="1">Home</a>
+    </div>
+
+    <!-- Sección de entradas de blog -->
+    <div class="blog-entries" id="blog-entries">
+      <div class="loading-spinner" id="loading-spinner"></div>
+      <!-- Entrada 1 -->
+      <a href="ganzosBlog.html" class="blog-entry">
+        <img src="GANZOS1.PNG" alt="Blog 1" class="blog-image">
+        <div class="blog-text">
+          <h2>GOOSE FOOTBALL GAME IN 6 DAYS</h2>
+          <p>How did I manage to write over a thousand lines of code to create a unique video game? By blending creativity, technical skills, and the power of artificial intelligence as my ally...</p>
+        </div>
+      </a>
+      <!-- Entrada 2 -->
+      <a href="claireBlog.html" class="blog-entry">
+        <img src="claire1.png" alt="Blog 2" class="blog-image">
+        <div class="blog-text">
+          <h2>AI FOR 3D ANIMATION</h2>
+          <p>How do I create captivating 3D animations with the help of artificial intelligence? By combining artistic vision, technical expertise...</p>
+        </div>
+      </a>
+      <!-- Entrada 3 -->
+      <a href="botBlog.html" class="blog-entry">
+        <img src="bot1.png" alt="Blog 3" class="blog-image">
+        <div class="blog-text">
+          <h2>AI FOR 3D MODEL AND CONCEPTS</h2>
+          <p>How do I draw inspiration from AI-generated 3D models to craft my own unique creations? By tapping into the power of artificial intelligence...</p>
+        </div>
+      </a>
+    </div>
+
+    <!-- Paginación -->
+    <div class="pagination" id="pagination">
+      <a data-page="0" class="prev-arrow" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
+        </svg>
+        <span>Previous</span>
+      </a>
+      <a data-page="1" class="active">1</a>
+      <a data-page="2">2</a>
+      <a data-page="3">3</a>
+      <a data-page="2" class="next-arrow">
+        <span>Next</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+
+
+  <!-- JavaScript para la paginación dinámica con history.pushState -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const blogEntriesContainer = document.getElementById('blog-entries');
+      const loadingSpinner = document.getElementById('loading-spinner');
+      const paginationLinks = document.querySelectorAll('.pagination a, .pagination-link');
+      const totalPages = 3;
+
+      // Función para obtener el número de página de la URL
+      function getPageFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        const page = parseInt(params.get('page')) || 1;
+        return Math.max(1, Math.min(page, totalPages));
+      }
+
+      // Función para actualizar la URL y el historial
+      function updateURL(page) {
+        const newURL = `${window.location.pathname}?page=${page}`;
+        history.pushState({ page: page }, '', newURL);
+      }
+
+      // Función para cargar las entradas
+      function fetchEntries(page) {
+        const url = `entries-page${page}.html`;
+
+        // Mostrar el spinner y aplicar fade-out
+        loadingSpinner.style.display = 'block';
+        blogEntriesContainer.classList.add('fade');
+
+        fetch(url)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.text();
+          })
+          .then(data => {
+            // Actualizar el contenido y aplicar fade-in
+            setTimeout(() => {
+              blogEntriesContainer.innerHTML = data;
+              blogEntriesContainer.classList.remove('fade');
+              loadingSpinner.style.display = 'none';
+            }, 300); // Sincronizado con la duración del fade
+          })
+          .catch(error => {
+            console.error('Error fetching entries:', error);
+            blogEntriesContainer.innerHTML = '<p>Error loading entries. Please try again later.</p>';
+            blogEntriesContainer.classList.remove('fade');
+            loadingSpinner.style.display = 'none';
+          });
+      }
+
+      // Función para actualizar la paginación
+      function updatePagination(page) {
+        paginationLinks.forEach(link => {
+          link.classList.remove('active');
+          if (parseInt(link.getAttribute('data-page')) === page) {
+            link.classList.add('active');
+          }
+        });
+
+        const prevArrow = document.querySelector('.prev-arrow');
+        const nextArrow = document.querySelector('.next-arrow');
+        const prevPage = page - 1;
+        const nextPage = page + 1;
+
+        // Mostrar/ocultar "Previous"
+        if (prevPage >= 1) {
+          prevArrow.setAttribute('data-page', prevPage);
+          prevArrow.style.display = 'flex';
+        } else {
+          prevArrow.style.display = 'none';
+        }
+
+        // Mostrar/ocultar "Next"
+        if (nextPage <= totalPages) {
+          nextArrow.setAttribute('data-page', nextPage);
+          nextArrow.style.display = 'flex';
+        } else {
+          nextArrow.style.display = 'none';
+        }
+      }
+
+      // Cargar la página inicial según la URL
+      const initialPage = getPageFromURL();
+      fetchEntries(initialPage);
+      updatePagination(initialPage);
+
+      // Manejar clics en los enlaces de paginación
+      paginationLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+
+          const page = parseInt(link.getAttribute('data-page'));
+          if (page === 0) return; // Evitar que "Previous" en página 1 haga algo raro
+
+          fetchEntries(page);
+          updatePagination(page);
+          updateURL(page);
+        });
+      });
+
+      // Manejar el evento popstate
+      window.addEventListener('popstate', (e) => {
+        const page = e.state ? e.state.page : getPageFromURL();
+        fetchEntries(page);
+        updatePagination(page);
+      });
+    });
+  </script>
+</body>
+</html>

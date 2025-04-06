@@ -1,0 +1,282 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <title>Procedural Textures in Blender</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?display=swap&family=Inter:ital,wght@0,300;1,300" rel="stylesheet" type="text/css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background:
+        url('pattern.svg'),
+        linear-gradient(180deg, #261F33 0%, #000000 100%);
+      background-size: 512px, auto;
+      background-position: center, center;
+      background-repeat: repeat, no-repeat;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: #fff;
+    }
+
+    #main {
+      background: rgba(18, 18, 18, 0.9); /* Fondo semi-transparente para que el SVG sea visible detrás */
+      max-width: 55rem; /* Reducimos el ancho para que más área del SVG sea visible */
+      margin: 0 auto;
+      padding: 2rem 4rem;
+      border-radius: 1px;
+    }
+
+    .blog-post {
+      text-align: center;
+    }
+
+    .blog-cover-image {
+      width: 500px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      margin: 0 auto 2rem auto;
+      display: block;
+    }
+
+    .blog-post h2 {
+      color: #5A4C70;
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 1.5em;
+      line-height: 1.8;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .blog-post p {
+      color: #8E8E8E;
+      font-family: 'Inter', sans-serif;
+      font-size: 1em;
+      line-height: 1.875;
+      font-weight: 300;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    /* Estilo para la galería 3x3 */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 0 auto 3rem auto;
+      max-width: 100%;
+    }
+
+    .gallery img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      cursor: pointer; /* Indica que la imagen es clickeable */
+      transition: transform 0.2s ease; /* Animación al hacer hover */
+    }
+
+    .gallery img:hover {
+      transform: scale(1.05); /* Efecto de aumento al pasar el mouse */
+    }
+
+    /* Estilo para el modal (pantalla completa) */
+    .modal {
+      display: none; /* Oculto por defecto */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9); /* Fondo oscuro semi-transparente */
+      z-index: 1000; /* Asegura que esté por encima de todo */
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal img {
+      max-width: 90%; /* Limita el ancho para que no toque los bordes */
+      max-height: 90%; /* Limita la altura para que no toque los bordes */
+      object-fit: contain; /* Mantiene la proporción de la imagen */
+      border-radius: 8px;
+    }
+
+    .modal .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: #fff;
+      font-size: 2.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .modal .close:hover {
+      color: #8E8E8E;
+    }
+
+    /* Estilo para la flecha de regreso */
+    .back-arrow {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .back-arrow svg {
+      width: 24px;
+      height: 24px;
+      fill: #5A4C70;
+      transition: fill 0.3s ease;
+    }
+
+    .back-arrow span {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9em;
+      color: #5A4C70;
+      transition: color 0.3s ease;
+    }
+
+    .back-arrow:hover svg {
+      fill: #8E8E8E;
+    }
+
+    .back-arrow:hover span {
+      color: #8E8E8E;
+    }
+
+    @media (max-width: 736px) {
+      #main {
+        padding: 3rem 2rem;
+      }
+
+      .blog-post h2 {
+        font-size: 1.25em;
+      }
+
+      .blog-cover-image {
+        width: 250px;
+      }
+
+      .gallery img {
+        height: 100px;
+      }
+
+      .back-arrow {
+        top: 0.75rem;
+        left: 0.75rem;
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      #main {
+        padding: 2rem 1.5rem;
+      }
+
+      .blog-post h2 {
+        font-size: 1em;
+      }
+
+      .blog-cover-image {
+        width: 200px;
+      }
+
+      .gallery img {
+        height: 80px;
+      }
+
+      .back-arrow {
+        top: 0.5rem;
+        left: 0.5rem;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="main">
+    <!-- Flecha de regreso -->
+    <a href="index.html" class="back-arrow">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
+      </svg>
+      <span>Back</span>
+    </a>
+
+    <div class="blog-post">
+      <img src="landscape 2.png" alt="Bot Character" class="blog-cover-image">
+      <h2>Procedural Textures in Blender</h2>
+      <p>Procedural textures in Blender are textures generated algorithmically using mathematical functions rather than relying on image-based maps. They are created within Blender's node-based material system, primarily using the Shader Editor, where nodes like Noise, Voronoi, Musgrave, and Wave are combined to produce complex patterns such as marble, wood, stone, or abstract designs. Unlike traditional textures, procedural textures are resolution-independent, meaning they can be scaled infinitely without losing quality, and they are highly customizable through parameters like scale, distortion, and color. This approach allows artists to create seamless, realistic, or stylized materials directly in Blender, saving memory and enabling dynamic adjustments without the need for external image files.</p>
+
+      <!-- Galería 3x3 -->
+      <div class="gallery">
+        <img src="Isla landscape.png" alt="Procedural Texture 1">
+        <img src="landscape 2.png" alt="Procedural Texture 2">
+        <img src="x.png" alt="Procedural Texture 3">
+        <img src="Oxide Bot04C.png" alt="Procedural Texture 4">
+        <img src="Oxide Bot04D.png" alt="Procedural Texture 5">
+        <img src="x.png" alt="Procedural Texture 6">
+        <img src="x.png" alt="Procedural Texture 7">
+        <img src="nebulas1.png" alt="Procedural Texture 8">
+        <img src="nebulas2.png" alt="Procedural Texture 9">
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para la imagen ampliada -->
+  <div class="modal" id="imageModal">
+    <span class="close">&times;</span>
+    <img id="modalImage" src="" alt="Enlarged Image">
+  </div>
+
+  <script>
+    // Obtener elementos del DOM
+    const galleryImages = document.querySelectorAll('.gallery img');
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const closeModal = document.querySelector('.modal .close');
+
+    // Añadir evento de clic a cada imagen de la galería
+    galleryImages.forEach(image => {
+      image.addEventListener('click', () => {
+        modal.style.display = 'flex'; // Mostrar el modal
+        modalImage.src = image.src; // Establecer la imagen del modal
+        modalImage.alt = image.alt; // Mantener la accesibilidad
+      });
+    });
+
+    // Cerrar el modal al hacer clic en la "X"
+    closeModal.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    // Cerrar el modal al hacer clic fuera de la imagen
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+
+    // Cerrar el modal con la tecla Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.style.display === 'flex') {
+        modal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
