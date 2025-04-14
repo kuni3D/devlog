@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <title>Next project</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?display=swap&family=Inter:ital,wght@0,300;1,300" rel="stylesheet" type="text/css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background:
+        url('pattern.svg'),
+        linear-gradient(180deg, #261F33 0%, #000000 100%);
+      background-size: 512px, auto;
+      background-position: center, center;
+      background-repeat: repeat, no-repeat;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: #fff;
+    }
+
+    #main {
+      background: rgba(18, 18, 18, 0.9); /* Fondo semi-transparente para que el SVG sea visible detrás */
+      max-width: 55rem; /* Reducimos el ancho para que más área del SVG sea visible */
+      margin: 0 auto;
+      padding: 2rem 4rem;
+      border-radius: 1px;
+    }
+
+    .blog-post {
+      text-align: center;
+    }
+
+    .blog-cover-image {
+      width: 500px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      margin: 0 auto 2rem auto;
+      display: block;
+    }
+
+    .blog-post h2 {
+      color: #5A4C70;
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 1.5em;
+      line-height: 1.8;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .blog-post p {
+      color: #8E8E8E;
+      font-family: 'Inter', sans-serif;
+      font-size: 1em;
+      line-height: 1.875;
+      font-weight: 300;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    /* Estilo para la flecha de regreso */
+    .back-arrow {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      display: flex; /* Mantenemos flex para alinear */
+      align-items: center; /* Centra verticalmente */
+      gap: 0.5rem; /* Reducimos el espacio a algo más razonable */
+    }
+
+    .back-arrow svg {
+      width: 24px; /* Asegura que el SVG tenga tamaño */
+      height: 24px;
+      fill: #5A4C70;
+      transition: fill 0.3s ease;
+    }
+
+    .back-arrow span {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9em;
+      color: #5A4C70;
+      transition: color 0.3s ease;
+    }
+
+    .back-arrow:hover svg {
+      fill: #8E8E8E;
+    }
+
+    .back-arrow:hover span {
+      color: #8E8E8E;
+    }
+
+    @media (max-width: 736px) {
+      #main {
+        padding: 3rem 2rem;
+      }
+
+      .blog-post h2 {
+        font-size: 1.25em;
+      }
+
+      .blog-cover-image {
+        width: 250px;
+      }
+
+      .back-arrow {
+        top: 0.75rem;
+        left: 0.75rem;
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      #main {
+        padding: 2rem 1.5rem;
+      }
+
+      .blog-post h2 {
+        font-size: 1em;
+      }
+
+      .blog-cover-image {
+        width: 200px;
+      }
+
+      .back-arrow {
+        top: 0.5rem;
+        left: 0.5rem;
+        width: 18px;
+        height: 18px;
+      }
+    }
+    .blog-video {
+  display: block;
+  max-width: 100%; /* Asegura que el video no se desborde */
+  width: 500px; /* Mismo ancho que la imagen para consistencia */
+  height: auto; /* Mantiene la proporción */
+  margin: 2rem auto; /* Centra el video y añade espacio arriba/abajo */
+  border-radius: 8px; /* Bordes redondeados como la imagen */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra sutil para profundidad */
+}
+
+/* Ajustes para pantallas más pequeñas */
+@media (max-width: 736px) {
+  .blog-video {
+    width: 250px; /* Mismo ancho que la imagen en pantallas pequeñas */
+  }
+}
+
+@media (max-width: 360px) {
+  .blog-video {
+    width: 200px; /* Mismo ancho que la imagen en pantallas más pequeñas */
+  }
+}
+  </style>
+</head>
+<body>
+  <div id="main">
+    <!-- Flecha de regreso -->
+    <a href="index.html" class="back-arrow">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
+      </svg>
+      <span>Back</span>
+    </a>
+
+    <div class="blog-post">
+      <img src="catitoportada.png" alt="Next Project Game" class="blog-cover-image">
+      <h2>Por ahora llevo 6 días (8 de Abril)</h2>
+      <p>Gané mucha práctica con el juego de los ganzos jugando futbol, por lo que me inspira y motiva a seguir desarrollando más videojuegos para WEB. Esta vez será uno mas complejo. De disparos, sigilo, recompensas, multiplayer o single.</p>
+      <br>SOON
+      <br>
+      <!-- Video insertado aquí -->
+<video class="blog-video" controls>
+  <source src="catos.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+<br>
+
+    </div>
+  </div>
+</body>
+</html>
