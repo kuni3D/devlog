@@ -25,8 +25,8 @@
     }
 
     #main {
-      background: rgba(18, 18, 18, 0.9); /* Fondo semi-transparente para que el SVG sea visible detrás */
-      max-width: 55rem; /* Reducimos el ancho para que más área del SVG sea visible */
+      background: rgba(18, 18, 18, 0.9);
+      max-width: 55rem;
       margin: 0 auto;
       padding: 2rem 4rem;
       border-radius: 1px;
@@ -65,18 +65,17 @@
       text-align: center;
     }
 
-    /* Estilo para la flecha de regreso */
     .back-arrow {
       position: absolute;
       top: 1rem;
       left: 1rem;
-      display: flex; /* Mantenemos flex para alinear */
-      align-items: center; /* Centra verticalmente */
-      gap: 0.5rem; /* Reducimos el espacio a algo más razonable */
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .back-arrow svg {
-      width: 24px; /* Asegura que el SVG tenga tamaño */
+      width: 24px;
       height: 24px;
       fill: #5A4C70;
       transition: fill 0.3s ease;
@@ -97,6 +96,38 @@
       color: #8E8E8E;
     }
 
+    .blog-video {
+      max-width: 100%;
+      width: 240px; /* Ancho para que quepan dos videos lado a lado */
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .video-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px; /* Espacio entre videos */
+      margin: 2rem auto;
+      flex-wrap: wrap; /* Permite que se apilen en pantallas pequeñas */
+    }
+
+    /* Estilo para la nota al pie */
+    .video-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .video-caption {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85em;
+      color: #8E8E8E;
+      margin-top: 0.5rem;
+      text-align: center;
+      max-width: 240px; /* Igual al ancho del video para consistencia */
+    }
+
     @media (max-width: 736px) {
       #main {
         padding: 3rem 2rem;
@@ -108,6 +139,14 @@
 
       .blog-cover-image {
         width: 250px;
+      }
+
+      .blog-video {
+        width: 250px;
+      }
+
+      .video-caption {
+        max-width: 250px; /* Ajustado al ancho del video */
       }
 
       .back-arrow {
@@ -131,6 +170,15 @@
         width: 200px;
       }
 
+      .blog-video {
+        width: 200px;
+      }
+
+      .video-caption {
+        max-width: 200px; /* Ajustado al ancho del video */
+        font-size: 0.75em;
+      }
+
       .back-arrow {
         top: 0.5rem;
         left: 0.5rem;
@@ -138,34 +186,10 @@
         height: 18px;
       }
     }
-
-    .blog-video {
-  display: block;
-  max-width: 100%; /* Asegura que el video no se desborde */
-  width: 500px; /* Mismo ancho que la imagen para consistencia */
-  height: auto; /* Mantiene la proporción */
-  margin: 2rem auto; /* Centra el video y añade espacio arriba/abajo */
-  border-radius: 8px; /* Bordes redondeados como la imagen */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra sutil para profundidad */
-}
-
-/* Ajustes para pantallas más pequeñas */
-@media (max-width: 736px) {
-  .blog-video {
-    width: 250px; /* Mismo ancho que la imagen en pantallas pequeñas */
-  }
-}
-
-@media (max-width: 360px) {
-  .blog-video {
-    width: 200px; /* Mismo ancho que la imagen en pantallas más pequeñas */
-  }
-}
   </style>
 </head>
 <body>
   <div id="main">
-    <!-- Flecha de regreso -->
     <a href="index.html" class="back-arrow">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
@@ -179,19 +203,41 @@
       <p>How do I create captivating 3D animations with the help of artificial intelligence? By combining artistic vision, technical expertise, and cutting-edge AI tools, I bring characters and scenes to life in innovative ways. Using software like Cascadeur and Rokoko, I streamline the animation process—leveraging Cascadeur’s AI-driven physics to craft realistic movements and Rokoko’s motion capture technology to translate real-world actions into digital performances. Additionally, I harness the power of AI video tools like Runway to generate dynamic sequences, refine keyframes, and experiment with stylized effects. AI accelerates my workflow by automating repetitive tasks, suggesting natural motion paths, and enhancing textures, allowing me to focus on the creative aspects of storytelling. This approach not only showcases my proficiency in 3D animation and modern tools but also highlights my ability to blend art, technology, and AI collaboration, delivering visually stunning and seamless animations. I’m eager to apply this same creativity and innovation to future projects.
       </p>
 
-      <!-- Video insertado aquí -->
-<video class="blog-video" controls>
-  <source src="claire1.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-<br>
-<video class="blog-video" controls>
-  <source src="anim2.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+      <!-- Primer par de videos (arriba, lado a lado) -->
+      <div class="video-container">
+        <div class="video-wrapper">
+          <video class="blog-video" controls>
+            <source src="claire4.mp4" type="video/mp4">
+            ¿Internet?
+          </video>
+          <figcaption class="video-caption">3D Model: by me. Animation: by Ai. My own voice changed.</figcaption>
+        </div>
+        <div class="video-wrapper">
+          <video class="blog-video" controls>
+            <source src="claire3.mp4" type="video/mp4">
+            ¿Internet?
+          </video>
+          <figcaption class="video-caption">3D Model: by me. Animation: by Ai. My own voice changed.</figcaption>
+        </div>
+      </div>
 
-
-
+      <!-- Segundo par de videos (abajo, lado a lado) -->
+      <div class="video-container">
+        <div class="video-wrapper">
+          <video class="blog-video" controls>
+            <source src="claire1.mp4" type="video/mp4">
+            ¿Internet?
+          </video>
+          <figcaption class="video-caption">3D Model: by me. Animation: by Ai. No Sound.</figcaption>
+        </div>
+        <div class="video-wrapper">
+          <video class="blog-video" controls>
+            <source src="anim2.mp4" type="video/mp4">
+            ¿Internet?
+          </video>
+          <figcaption class="video-caption">3D Model: by me. Animation: by Ai. No Sound.</figcaption>
+        </div>
+      </div>
     </div>
   </div>
 </body>
