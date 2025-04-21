@@ -44,9 +44,11 @@
 
     .profile-image {
       width: 300px;
-      border-radius: 100%;
+      height: 300px; /* Añadido para asegurar un contenedor cuadrado */
+      border-radius: 50%; /* Cambiado a 50% para consistencia */
       border: 1px solid rgba(0,0,0,0.102);
       padding: 1.75rem;
+      object-fit: cover; /* Añadido para ajustar la imagen al círculo */
       transition: transform 0.3s ease; /* Animación suave al pasar el mouse */
     }
 
@@ -116,34 +118,92 @@
       transform: translateY(-2px); /* Efecto de elevación al pasar el mouse */
     }
 
-    .artstation-button svg {
-      width: 1.25em;
-      height: 1.25em;
-      margin-right: 0.75rem;
-      fill: #FFFFFF;
-    }
-
     .artstation-button span {
       line-height: 1;
     }
 
     .home-link {
-      text-align: center; /* Centra el texto horizontalmente */
-      margin-top: 1rem; /* Espacio entre el botón y el enlace */
+      position: fixed; /* Cambiado a fixed para que flote */
+      top: 1rem;
+      left: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 1000; /* Por encima de otros elementos */
+    }
+
+    .home-link svg {
+      width: 24px;
+      height: 24px;
+      fill: #5A4C70;
+      transition: fill 0.3s ease;
     }
 
     .home-link a {
-      color: #5A4C70; /* Color similar al resto de los enlaces */
+      color: #5A4C70;
       font-family: 'Inter', sans-serif;
       font-size: 0.9em;
-      text-decoration: none; /* Quita el subrayado */
+      text-decoration: none;
       transition: color 0.3s ease;
     }
 
+    .home-link:hover svg {
+      fill: #8E8E8E;
+    }
 
-    .home-link a:hover {
-      color: #8E8E8E; /* Cambia de color al pasar el mouse */
-      text-decoration: underline; /* Subrayado al pasar el mouse */
+    .home-link:hover a {
+      color: #8E8E8E;
+    }
+
+    /* Contenedor del botón de idioma */
+    .language-toggle {
+      position: fixed; /* Fijo para que flote */
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      align-items: center;
+      z-index: 1000; /* Por encima de otros elementos */
+    }
+
+    /* Estilo del botón de idioma */
+    .lang-btn {
+      background: linear-gradient(145deg, #2A233A, #1C1726);
+      border: 1px solid #5A4C70;
+      border-radius: 24px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    /* Texto dentro del botón */
+    .lang-btn .lang-text {
+      color: #8E8E8E;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9em;
+      font-weight: 300;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+
+    /* Efecto hover */
+    .lang-btn:hover {
+      background: linear-gradient(145deg, #3A2F4A, #2A233A);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .lang-btn:hover .lang-text {
+      color: #fff;
+    }
+
+    /* Efecto activo (click) */
+    .lang-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
     }
 
     /* Estilos para las entradas de blog */
@@ -297,6 +357,7 @@
 
       .profile-image {
         width: 12rem;
+        height: 12rem; /* Añadido para mantener proporción cuadrada */
       }
 
       .profile-text h3 {
@@ -336,6 +397,33 @@
         padding: 0.4rem 0.8rem;
         font-size: 0.9em;
       }
+
+      .home-link {
+        top: 0.75rem;
+        left: 0.75rem;
+      }
+
+      .home-link svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .home-link a {
+        font-size: 0.8em;
+      }
+
+      .language-toggle {
+        top: 0.75rem;
+        right: 0.75rem;
+      }
+
+      .lang-btn {
+        padding: 0.4rem 0.8rem;
+      }
+
+      .lang-btn .lang-text {
+        font-size: 0.8em;
+      }
     }
 
     @media (max-width: 360px) {
@@ -359,35 +447,70 @@
         padding: 0.3rem 0.6rem;
         font-size: 0.8em;
       }
+
+      .home-link {
+        top: 0.5rem;
+        left: 0.5rem;
+      }
+
+      .home-link svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .home-link a {
+        font-size: 0.75em;
+      }
+
+      .language-toggle {
+        top: 0.5rem;
+        right: 0.5rem;
+      }
+
+      .lang-btn {
+        padding: 0.3rem 0.6rem;
+      }
+
+      .lang-btn .lang-text {
+        font-size: 0.75em;
+      }
     }
   </style>
 </head>
 <body>
   <div id="main">
+    <!-- Botón de cambio de idioma -->
+    <div class="language-toggle">
+      <button id="lang-btn" class="lang-btn">
+        <span class="lang-text">EN</span>
+      </button>
+    </div>
+
+    <!-- Enlace Home flotante -->
+    <div class="home-link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
+      </svg>
+      <a href="#" class="pagination-link" data-page="1" data-translate="home">Home</a>
+    </div>
+
     <div class="profile-container">
       <img src="A4.png" alt="Perfil" class="profile-image">
       <div class="profile-text">
         <a href="index.html">
-        <h3>KUNI'S DEVLOG</h3>
+          <h3 data-translate="devlog">KUNI'S DEVLOG</h3>
         </a>
-        <h1>Hi, I'm Alan</h1>
-        <p>DevArtist / 3D Generalist<br/>Blender & Three.js.</p>
+        <h1 data-translate="greeting">Hi, I'm Alan</h1>
+        <p data-translate="bio">DevArtist / 3D Generalist<br/>Blender & Three.js.</p>
       </div>
     </div>
     <a href="http://kuni3d.carrd.co" class="artstation-button">
-
-      <span>Portfolio</span>
+      <span data-translate="portfolio">Portfolio</span>
     </a>
-
-    <!-- Texto "Home" que añadiste -->
-    <div class="home-link">
-     <a href="#" class="pagination-link" data-page="1">Home</a>
-    </div>
 
     <!-- Sección de entradas de blog -->
     <div class="blog-entries" id="blog-entries">
       <div class="loading-spinner" id="loading-spinner"></div>
-
     </div>
 
     <!-- Paginación -->
@@ -410,34 +533,28 @@
     </div>
   </div>
 
-
-
-  <!-- JavaScript para la paginación dinámica con history.pushState -->
+  <!-- JavaScript para la paginación dinámica y cambio de idioma -->
   <script>
+    // Script para la paginación dinámica
     document.addEventListener('DOMContentLoaded', () => {
       const blogEntriesContainer = document.getElementById('blog-entries');
       const loadingSpinner = document.getElementById('loading-spinner');
       const paginationLinks = document.querySelectorAll('.pagination a, .pagination-link');
       const totalPages = 3;
 
-      // Función para obtener el número de página de la URL
       function getPageFromURL() {
         const params = new URLSearchParams(window.location.search);
         const page = parseInt(params.get('page')) || 1;
         return Math.max(1, Math.min(page, totalPages));
       }
 
-      // Función para actualizar la URL y el historial
       function updateURL(page) {
         const newURL = `${window.location.pathname}?page=${page}`;
         history.pushState({ page: page }, '', newURL);
       }
 
-      // Función para cargar las entradas
       function fetchEntries(page) {
         const url = `entries-page${page}.html`;
-
-        // Mostrar el spinner y aplicar fade-out
         loadingSpinner.style.display = 'block';
         blogEntriesContainer.classList.add('fade');
 
@@ -449,12 +566,11 @@
             return response.text();
           })
           .then(data => {
-            // Actualizar el contenido y aplicar fade-in
             setTimeout(() => {
               blogEntriesContainer.innerHTML = data;
               blogEntriesContainer.classList.remove('fade');
               loadingSpinner.style.display = 'none';
-            }, 300); // Sincronizado con la duración del fade
+            }, 300);
           })
           .catch(error => {
             console.error('Error fetching entries:', error);
@@ -464,7 +580,6 @@
           });
       }
 
-      // Función para actualizar la paginación
       function updatePagination(page) {
         paginationLinks.forEach(link => {
           link.classList.remove('active');
@@ -478,7 +593,6 @@
         const prevPage = page - 1;
         const nextPage = page + 1;
 
-        // Mostrar/ocultar "Previous"
         if (prevPage >= 1) {
           prevArrow.setAttribute('data-page', prevPage);
           prevArrow.style.display = 'flex';
@@ -486,7 +600,6 @@
           prevArrow.style.display = 'none';
         }
 
-        // Mostrar/ocultar "Next"
         if (nextPage <= totalPages) {
           nextArrow.setAttribute('data-page', nextPage);
           nextArrow.style.display = 'flex';
@@ -495,32 +608,67 @@
         }
       }
 
-      // Cargar la página inicial según la URL
       const initialPage = getPageFromURL();
       fetchEntries(initialPage);
       updatePagination(initialPage);
 
-      // Manejar clics en los enlaces de paginación
       paginationLinks.forEach(link => {
         link.addEventListener('click', (e) => {
           e.preventDefault();
-
           const page = parseInt(link.getAttribute('data-page'));
-          if (page === 0) return; // Evitar que "Previous" en página 1 haga algo raro
-
+          if (page === 0) return;
           fetchEntries(page);
           updatePagination(page);
           updateURL(page);
         });
       });
 
-      // Manejar el evento popstate
       window.addEventListener('popstate', (e) => {
         const page = e.state ? e.state.page : getPageFromURL();
         fetchEntries(page);
         updatePagination(page);
       });
     });
+
+    // Script para el cambio de idioma
+    const translations = {
+      en: {
+        home: "Home",
+        devlog: "KUNI'S DEVLOG",
+        greeting: "Hi, I'm Alan",
+        bio: "DevArtist / 3D Generalist<br/>Blender & Three.js.",
+        portfolio: "Portfolio"
+      },
+      es: {
+        home: "Inicio",
+        devlog: "DEVLOG DE KUNI",
+        greeting: "Hola, soy Alan",
+        bio: "DevArtist / Generalista 3D<br/>Blender & Three.js.",
+        portfolio: "Portafolio"
+      }
+    };
+
+    let currentLang = 'en';
+    const langBtn = document.getElementById('lang-btn');
+    const langText = langBtn.querySelector('.lang-text');
+    const translatableElements = document.querySelectorAll('[data-translate]');
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'es' : 'en';
+      langText.textContent = currentLang.toUpperCase();
+      translatableElements.forEach(element => {
+        const key = element.getAttribute('data-translate');
+        if (element.tagName === 'P') {
+          element.innerHTML = translations[currentLang][key];
+        } else {
+          element.textContent = translations[currentLang][key];
+        }
+      });
+      document.documentElement.lang = currentLang;
+    }
+
+    langBtn.addEventListener('click', toggleLanguage);
+    toggleLanguage();
   </script>
 </body>
 </html>

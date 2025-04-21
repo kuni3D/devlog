@@ -67,12 +67,13 @@
 
     /* Estilo para la flecha de regreso */
     .back-arrow {
-      position: absolute;
+      position: fixed; /* Cambiado de absolute a fixed */
       top: 1rem;
       left: 1rem;
       display: flex; /* Mantenemos flex para alinear */
       align-items: center; /* Centra verticalmente */
       gap: 0.5rem; /* Reducimos el espacio a algo más razonable */
+      z-index: 1000; /* Asegura que esté por encima de otros elementos */
     }
 
     .back-arrow svg {
@@ -97,6 +98,68 @@
       color: #8E8E8E;
     }
 
+    /* Contenedor del botón de idioma */
+    .language-toggle {
+      position: fixed; /* Cambiado de absolute a fixed */
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      align-items: center;
+      z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    }
+
+    /* Estilo del botón de idioma */
+    .lang-btn {
+      background: linear-gradient(145deg, #2A233A, #1C1726);
+      border: 1px solid #5A4C70;
+      border-radius: 24px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    /* Texto dentro del botón */
+    .lang-btn .lang-text {
+      color: #8E8E8E;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9em;
+      font-weight: 300;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+
+    /* Efecto hover */
+    .lang-btn:hover {
+      background: linear-gradient(145deg, #3A2F4A, #2A233A);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .lang-btn:hover .lang-text {
+      color: #fff;
+    }
+
+    /* Efecto activo (click) */
+    .lang-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    }
+
+    .blog-video {
+      display: block;
+      max-width: 100%; /* Asegura que el video no se desborde */
+      width: 500px; /* Mismo ancho que la imagen para consistencia */
+      height: auto; /* Mantiene la proporción */
+      margin: 2rem auto; /* Centra el video y añade espacio arriba/abajo */
+      border-radius: 8px; /* Bordes redondeados como la imagen */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra sutil para profundidad */
+    }
+
+    /* Ajustes para pantallas más pequeñas */
     @media (max-width: 736px) {
       #main {
         padding: 3rem 2rem;
@@ -110,11 +173,28 @@
         width: 250px;
       }
 
+      .blog-video {
+        width: 250px; /* Mismo ancho que la imagen en pantallas pequeñas */
+      }
+
       .back-arrow {
         top: 0.75rem;
         left: 0.75rem;
         width: 20px;
         height: 20px;
+      }
+
+      .language-toggle {
+        top: 0.75rem;
+        right: 0.75rem;
+      }
+
+      .lang-btn {
+        padding: 0.4rem 0.8rem;
+      }
+
+      .lang-btn .lang-text {
+        font-size: 0.8em;
       }
     }
 
@@ -131,35 +211,30 @@
         width: 200px;
       }
 
+      .blog-video {
+        width: 200px; /* Mismo ancho que la imagen en pantallas más pequeñas */
+      }
+
       .back-arrow {
         top: 0.5rem;
         left: 0.5rem;
         width: 18px;
         height: 18px;
       }
+
+      .language-toggle {
+        top: 0.5rem;
+        right: 0.5rem;
+      }
+
+      .lang-btn {
+        padding: 0.3rem 0.6rem;
+      }
+
+      .lang-btn .lang-text {
+        font-size: 0.75em;
+      }
     }
-    .blog-video {
-  display: block;
-  max-width: 100%; /* Asegura que el video no se desborde */
-  width: 500px; /* Mismo ancho que la imagen para consistencia */
-  height: auto; /* Mantiene la proporción */
-  margin: 2rem auto; /* Centra el video y añade espacio arriba/abajo */
-  border-radius: 8px; /* Bordes redondeados como la imagen */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra sutil para profundidad */
-}
-
-/* Ajustes para pantallas más pequeñas */
-@media (max-width: 736px) {
-  .blog-video {
-    width: 250px; /* Mismo ancho que la imagen en pantallas pequeñas */
-  }
-}
-
-@media (max-width: 360px) {
-  .blog-video {
-    width: 200px; /* Mismo ancho que la imagen en pantallas más pequeñas */
-  }
-}
   </style>
 </head>
 <body>
@@ -169,27 +244,82 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
       </svg>
-      <span>Back</span>
+      <span data-translate="back">Back</span>
     </a>
+
+    <!-- Botón de cambio de idioma -->
+    <div class="language-toggle">
+      <button id="lang-btn" class="lang-btn">
+        <span class="lang-text">EN</span>
+      </button>
+    </div>
 
     <div class="blog-post">
       <img src="catitoportada.png" alt="Next Project Game" class="blog-cover-image">
-      <h2>Por ahora llevo 6 días (8 de Abril)</h2>
-      <p>Gané mucha práctica con el juego de los ganzos jugando futbol, por lo que me inspira y motiva a seguir desarrollando más videojuegos para WEB. Esta vez será uno mas complejo. De disparos, sigilo, recompensas, multiplayer o single.</p>
-      <br>SOON
-      <br>
+      <h2 data-translate="title">Por ahora llevo 6 días (8 de Abril)</h2>
+      <p data-translate="description">Gané mucha práctica con el juego de los ganzos jugando futbol, por lo que me inspira y motiva a seguir desarrollando más videojuegos para WEB. Esta vez será uno mas complejo. De disparos, sigilo, recompensas, multiplayer o single.</p>
+      <br><span data-translate="soon">SOON</span><br>
       <!-- Video insertado aquí -->
-<video class="blog-video" controls>
-  <source src="catos.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-<br>
-<video class="blog-video" controls>
-  <source src="catos2.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
+      <video class="blog-video" controls>
+        <source src="catos.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <br>
+      <video class="blog-video" controls>
+        <source src="catos2.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
     </div>
   </div>
+
+  <script>
+    // Objeto con traducciones
+    const translations = {
+      en: {
+        back: "Back",
+        title: "So far, I've been working for 6 days (April 8)",
+        description: "I gained a lot of practice with the soccer-playing geese game, which inspires and motivates me to keep developing more web-based video games. This time, it will be a more complex one. Shooting, stealth, rewards, multiplayer or single-player.",
+        soon: "SOON"
+      },
+      es: {
+        back: "Volver",
+        title: "Por ahora llevo 6 días (8 de Abril)",
+        description: "Gané mucha práctica con el juego de los ganzos jugando futbol, por lo que me inspira y motiva a seguir desarrollando más videojuegos para WEB. Esta vez será uno mas complejo. De disparos, sigilo, recompensas, multiplayer o single.",
+        soon: "PRONTO"
+      }
+    };
+
+    // Estado inicial del idioma
+    let currentLang = 'en';
+
+    // Obtener elementos
+    const langBtn = document.getElementById('lang-btn');
+    const langText = langBtn.querySelector('.lang-text');
+    const translatableElements = document.querySelectorAll('[data-translate]');
+
+    // Función para cambiar el idioma
+    function toggleLanguage() {
+      // Cambiar idioma
+      currentLang = currentLang === 'en' ? 'es' : 'en';
+
+      // Actualizar texto del botón
+      langText.textContent = currentLang.toUpperCase();
+
+      // Actualizar textos traducibles
+      translatableElements.forEach(element => {
+        const key = element.getAttribute('data-translate');
+        element.textContent = translations[currentLang][key];
+      });
+
+      // Actualizar el atributo lang del HTML
+      document.documentElement.lang = currentLang;
+    }
+
+    // Evento click para el botón
+    langBtn.addEventListener('click', toggleLanguage);
+
+    // Inicializar con inglés
+    toggleLanguage();
+  </script>
 </body>
 </html>

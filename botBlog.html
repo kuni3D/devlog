@@ -67,12 +67,13 @@
 
     /* Estilo para la flecha de regreso */
     .back-arrow {
-      position: absolute;
+      position: fixed; /* Cambiado a fixed para que flote */
       top: 1rem;
       left: 1rem;
       display: flex; /* Mantenemos flex para alinear */
       align-items: center; /* Centra verticalmente */
       gap: 0.5rem; /* Reducimos el espacio a algo más razonable */
+      z-index: 1000; /* Por encima de otros elementos */
     }
 
     .back-arrow svg {
@@ -97,6 +98,57 @@
       color: #8E8E8E;
     }
 
+    /* Contenedor del botón de idioma */
+    .language-toggle {
+      position: fixed; /* Fijo para que flote */
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      align-items: center;
+      z-index: 1000; /* Por encima de otros elementos */
+    }
+
+    /* Estilo del botón de idioma */
+    .lang-btn {
+      background: linear-gradient(145deg, #2A233A, #1C1726);
+      border: 1px solid #5A4C70;
+      border-radius: 24px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    /* Texto dentro del botón */
+    .lang-btn .lang-text {
+      color: #8E8E8E;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9em;
+      font-weight: 300;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+
+    /* Efecto hover */
+    .lang-btn:hover {
+      background: linear-gradient(145deg, #3A2F4A, #2A233A);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .lang-btn:hover .lang-text {
+      color: #fff;
+    }
+
+    /* Efecto activo (click) */
+    .lang-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    }
+
     @media (max-width: 736px) {
       #main {
         padding: 3rem 2rem;
@@ -115,6 +167,19 @@
         left: 0.75rem;
         width: 20px;
         height: 20px;
+      }
+
+      .language-toggle {
+        top: 0.75rem;
+        right: 0.75rem;
+      }
+
+      .lang-btn {
+        padding: 0.4rem 0.8rem;
+      }
+
+      .lang-btn .lang-text {
+        font-size: 0.8em;
       }
     }
 
@@ -137,6 +202,19 @@
         width: 18px;
         height: 18px;
       }
+
+      .language-toggle {
+        top: 0.5rem;
+        right: 0.5rem;
+      }
+
+      .lang-btn {
+        padding: 0.3rem 0.6rem;
+      }
+
+      .lang-btn .lang-text {
+        font-size: 0.75em;
+      }
     }
   </style>
 </head>
@@ -147,16 +225,69 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
       </svg>
-      <span>Back</span>
+      <span data-translate="back">Back</span>
     </a>
+
+    <!-- Botón de cambio de idioma -->
+    <div class="language-toggle">
+      <button id="lang-btn" class="lang-btn">
+        <span class="lang-text">EN</span>
+      </button>
+    </div>
 
     <div class="blog-post">
       <img src="robotModel.png" alt="Bot Character" class="blog-cover-image">
-      <h2>Ai models and concepts</h2>
-      <p>How do I draw inspiration from AI-generated 3D models to craft my own unique creations? By tapping into the power of artificial intelligence, I explore a wealth of innovative designs that spark my creativity and guide my artistic process. AI tools generate diverse 3D models that serve as conceptual starting points, offering fresh perspectives on shapes, textures, and forms that I might not have envisioned otherwise. Using these models as references, I reimagine and refine them in software like Blender, sculpting my own original works that reflect my personal style while pushing creative boundaries. Additionally, I optimize the polygon count of these models to ensure they perform efficiently in real-time applications, balancing detail and functionality for seamless integration into projects like games or animations. This process not only highlights my ability to adapt and innovate with AI-generated concepts but also showcases my technical skill in 3D modeling, optimization, and artistic expression. I’m excited to continue leveraging AI as a collaborative tool to bring my visions to life in future endeavors.
-
-</p>
+      <h2 data-translate="title">Ai models and concepts</h2>
+      <p data-translate="description">How do I draw inspiration from AI-generated 3D models to craft my own unique creations? By tapping into the power of artificial intelligence, I explore a wealth of innovative designs that spark my creativity and guide my artistic process. AI tools generate diverse 3D models that serve as conceptual starting points, offering fresh perspectives on shapes, textures, and forms that I might not have envisioned otherwise. Using these models as references, I reimagine and refine them in software like Blender, sculpting my own original works that reflect my personal style while pushing creative boundaries. Additionally, I optimize the polygon count of these models to ensure they perform efficiently in real-time applications, balancing detail and functionality for seamless integration into projects like games or animations. This process not only highlights my ability to adapt and innovate with AI-generated concepts but also showcases my technical skill in 3D modeling, optimization, and artistic expression. I’m excited to continue leveraging AI as a collaborative tool to bring my visions to life in future endeavors.</p>
     </div>
   </div>
+
+  <script>
+    // Objeto con traducciones
+    const translations = {
+      en: {
+        back: "Back",
+        title: "Ai models and concepts",
+        description: "How do I draw inspiration from AI-generated 3D models to craft my own unique creations? By tapping into the power of artificial intelligence, I explore a wealth of innovative designs that spark my creativity and guide my artistic process. AI tools generate diverse 3D models that serve as conceptual starting points, offering fresh perspectives on shapes, textures, and forms that I might not have envisioned otherwise. Using these models as references, I reimagine and refine them in software like Blender, sculpting my own original works that reflect my personal style while pushing creative boundaries. Additionally, I optimize the polygon count of these models to ensure they perform efficiently in real-time applications, balancing detail and functionality for seamless integration into projects like games or animations. This process not only highlights my ability to adapt and innovate with AI-generated concepts but also showcases my technical skill in 3D modeling, optimization, and artistic expression. I’m excited to continue leveraging AI as a collaborative tool to bring my visions to life in future endeavors."
+      },
+      es: {
+        back: "Volver",
+        title: "Modelos y conceptos con IA",
+        description: "¿Cómo me inspiro en modelos 3D generados por IA para crear mis propias obras únicas? Al aprovechar el poder de la inteligencia artificial, exploro una gran cantidad de diseños innovadores que despiertan mi creatividad y guían mi proceso artístico. Las herramientas de IA generan diversos modelos 3D que sirven como puntos de partida conceptuales, ofreciendo nuevas perspectivas sobre formas, texturas y estructuras que de otra manera no habría imaginado. Usando estos modelos como referencias, los reimagino y perfecciono en software como Blender, esculpiendo mis propias obras originales que reflejan mi estilo personal mientras amplían los límites creativos. Además, optimizo el conteo de polígonos de estos modelos para garantizar que funcionen eficientemente en aplicaciones en tiempo real, equilibrando detalle y funcionalidad para una integración perfecta en proyectos como juegos o animaciones. Este proceso no solo destaca mi capacidad para adaptarme e innovar con conceptos generados por IA, sino que también muestra mi habilidad técnica en modelado 3D, optimización y expresión artística. Estoy entusiasmado por seguir utilizando la IA como una herramienta colaborativa para dar vida a mis visiones en futuros proyectos."
+      }
+    };
+
+    // Estado inicial del idioma
+    let currentLang = 'en';
+
+    // Obtener elementos
+    const langBtn = document.getElementById('lang-btn');
+    const langText = langBtn.querySelector('.lang-text');
+    const translatableElements = document.querySelectorAll('[data-translate]');
+
+    // Función para cambiar el idioma
+    function toggleLanguage() {
+      // Cambiar idioma
+      currentLang = currentLang === 'en' ? 'es' : 'en';
+
+      // Actualizar texto del botón
+      langText.textContent = currentLang.toUpperCase();
+
+      // Actualizar textos traducibles
+      translatableElements.forEach(element => {
+        const key = element.getAttribute('data-translate');
+        element.textContent = translations[currentLang][key];
+      });
+
+      // Actualizar el atributo lang del HTML
+      document.documentElement.lang = currentLang;
+    }
+
+    // Evento click para el botón
+    langBtn.addEventListener('click', toggleLanguage);
+
+    // Inicializar con inglés
+    toggleLanguage();
+  </script>
 </body>
 </html>

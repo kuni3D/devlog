@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-  <title>Ai for Concepts</title>
+  <title>How I learned Github, CMD & Js</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?display=swap&family=Inter:ital,wght@0,300;1,300" rel="stylesheet" type="text/css" />
@@ -67,12 +67,13 @@
 
     /* Estilo para la flecha de regreso */
     .back-arrow {
-      position: absolute;
+      position: fixed; /* Cambiado a fixed para que flote */
       top: 1rem;
       left: 1rem;
       display: flex; /* Mantenemos flex para alinear */
       align-items: center; /* Centra verticalmente */
       gap: 0.5rem; /* Reducimos el espacio a algo más razonable */
+      z-index: 1000; /* Por encima de otros elementos */
     }
 
     .back-arrow svg {
@@ -97,6 +98,68 @@
       color: #8E8E8E;
     }
 
+    /* Contenedor del botón de idioma */
+    .language-toggle {
+      position: fixed; /* Fijo para que flote */
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      align-items: center;
+      z-index: 1000; /* Por encima de otros elementos */
+    }
+
+    /* Estilo del botón de idioma */
+    .lang-btn {
+      background: linear-gradient(145deg, #2A233A, #1C1726);
+      border: 1px solid #5A4C70;
+      border-radius: 24px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    /* Texto dentro del botón */
+    .lang-btn .lang-text {
+      color: #8E8E8E;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9em;
+      font-weight: 300;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+
+    /* Efecto hover */
+    .lang-btn:hover {
+      background: linear-gradient(145deg, #3A2F4A, #2A233A);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .lang-btn:hover .lang-text {
+      color: #fff;
+    }
+
+    /* Efecto activo (click) */
+    .lang-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    }
+
+    /* Estilo para los enlaces */
+    .blog-post a {
+      color: #8E8E8E;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .blog-post a:hover {
+      color: #fff;
+    }
+
     @media (max-width: 736px) {
       #main {
         padding: 3rem 2rem;
@@ -115,6 +178,19 @@
         left: 0.75rem;
         width: 20px;
         height: 20px;
+      }
+
+      .language-toggle {
+        top: 0.75rem;
+        right: 0.75rem;
+      }
+
+      .lang-btn {
+        padding: 0.4rem 0.8rem;
+      }
+
+      .lang-btn .lang-text {
+        font-size: 0.8em;
       }
     }
 
@@ -137,6 +213,19 @@
         width: 18px;
         height: 18px;
       }
+
+      .language-toggle {
+        top: 0.5rem;
+        right: 0.5rem;
+      }
+
+      .lang-btn {
+        padding: 0.3rem 0.6rem;
+      }
+
+      .lang-btn .lang-text {
+        font-size: 0.75em;
+      }
     }
   </style>
 </head>
@@ -147,19 +236,78 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
       </svg>
-      <span>Back</span>
+      <span data-translate="back">Back</span>
     </a>
+
+    <!-- Botón de cambio de idioma -->
+    <div class="language-toggle">
+      <button id="lang-btn" class="lang-btn">
+        <span class="lang-text">EN</span>
+      </button>
+    </div>
 
     <div class="blog-post">
       <img src="Kuni3D_min(1).png" alt="Bot Character" class="blog-cover-image">
-      <h2>How I learned Github, CMD & Js</h2>
-      <p>I mastered GitHub, Command Line, and JavaScript through relentless practice, guided by AI. Every error was a lesson—each fix, a victory. I set clear goals, like pushing daily to GitHub or building small JS projects. When stuck, AI explained concepts in simple terms, turning confusion into clarity. I embraced the trial-and-error process, celebrating every working script or resolved merge conflict. With total focus and time invested, I progressed from basics to confident coding. Now, I automate tasks with CMD, collaborate via Git, and create with JS—proof that persistence + AI = unstoppable learning. 🚀
-<br>https://github.com/kuni3D
-<br>Long story short:
-<br>AI + grit = GitHub, CMD & JS skills. Errors → fixes → wins. Goals kept me going. Now I code confidently! 💻
-
-</p>
+      <h2 data-translate="title">How I learned Github, CMD & Js</h2>
+      <p>
+        <span data-translate="description">I mastered GitHub, Command Line, and JavaScript through relentless practice, guided by AI. Every error was a lesson—each fix, a victory. I set clear goals, like pushing daily to GitHub or building small JS projects. When stuck, AI explained concepts in simple terms, turning confusion into clarity. I embraced the trial-and-error process, celebrating every working script or resolved merge conflict. With total focus and time invested, I progressed from basics to confident coding. Now, I automate tasks with CMD, collaborate via Git, and create with JS—proof that persistence + AI = unstoppable learning. 🚀</span>
+        <br><a href="https://github.com/kuni3D">https://github.com/kuni3D</a>
+        <br><span data-translate="summary_title">Long story short:</span>
+        <br><span data-translate="summary">AI + grit = GitHub, CMD & JS skills. Errors → fixes → wins. Goals kept me going. Now I code confidently! 💻</span>
+      </p>
     </div>
   </div>
+
+  <script>
+    // Objeto con traducciones
+    const translations = {
+      en: {
+        back: "Back",
+        title: "How I learned Github, CMD & Js",
+        description: "I mastered GitHub, Command Line, and JavaScript through relentless practice, guided by AI. Every error was a lesson—each fix, a victory. I set clear goals, like pushing daily to GitHub or building small JS projects. When stuck, AI explained concepts in simple terms, turning confusion into clarity. I embraced the trial-and-error process, celebrating every working script or resolved merge conflict. With total focus and time invested, I progressed from basics to confident coding. Now, I automate tasks with CMD, collaborate via Git, and create with JS—proof that persistence + AI = unstoppable learning. 🚀",
+        summary_title: "Long story short:",
+        summary: "AI + grit = GitHub, CMD & JS skills. Errors → fixes → wins. Goals kept me going. Now I code confidently! 💻"
+      },
+      es: {
+        back: "Volver",
+        title: "Cómo aprendí Github, CMD y JS",
+        description: "Dominé GitHub, la línea de comandos y JavaScript a través de una práctica incansable, guiado por IA. Cada error fue una lección, cada corrección, una victoria. Establecí metas claras, como hacer push diario a GitHub o construir pequeños proyectos en JS. Cuando me atascaba, la IA explicaba conceptos en términos simples, convirtiendo la confusión en claridad. Acepté el proceso de prueba y error, celebrando cada script funcional o conflicto de fusión resuelto. Con total enfoque y tiempo invertido, pasé de lo básico a programar con confianza. Ahora, automatizo tareas con CMD, colaboro a través de Git y creo con JS: prueba de que persistencia + IA = aprendizaje imparable. 🚀",
+        summary_title: "En resumen:",
+        summary: "IA + determinación = habilidades en GitHub, CMD y JS. Errores → correcciones → victorias. Las metas me mantuvieron en marcha. ¡Ahora programo con confianza! 💻"
+      }
+    };
+
+    // Estado inicial del idioma
+    let currentLang = 'en';
+
+    // Obtener elementos
+    const langBtn = document.getElementById('lang-btn');
+    const langText = langBtn.querySelector('.lang-text');
+    const translatableElements = document.querySelectorAll('[data-translate]');
+
+    // Función para cambiar el idioma
+    function toggleLanguage() {
+      // Cambiar idioma
+      currentLang = currentLang === 'en' ? 'es' : 'en';
+
+      // Actualizar texto del botón
+      langText.textContent = currentLang.toUpperCase();
+
+      // Actualizar textos traducibles
+      translatableElements.forEach(element => {
+        const key = element.getAttribute('data-translate');
+        element.textContent = translations[currentLang][key];
+      });
+
+      // Actualizar el atributo lang del HTML
+      document.documentElement.lang = currentLang;
+    }
+
+    // Evento click para el botón
+    langBtn.addEventListener('click', toggleLanguage);
+
+    // Inicializar con inglés
+    toggleLanguage();
+  </script>
 </body>
 </html>

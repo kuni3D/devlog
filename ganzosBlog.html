@@ -67,12 +67,13 @@
 
     /* Estilo para la flecha de regreso */
     .back-arrow {
-      position: absolute;
+      position: fixed; /* Cambiado a fixed para que flote */
       top: 1rem;
       left: 1rem;
       display: flex; /* Mantenemos flex para alinear */
       align-items: center; /* Centra verticalmente */
       gap: 0.5rem; /* Reducimos el espacio a algo más razonable */
+      z-index: 1000; /* Por encima de otros elementos */
     }
 
     .back-arrow svg {
@@ -97,6 +98,68 @@
       color: #8E8E8E;
     }
 
+    /* Contenedor del botón de idioma */
+    .language-toggle {
+      position: fixed; /* Fijo para que flote */
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      align-items: center;
+      z-index: 1000; /* Por encima de otros elementos */
+    }
+
+    /* Estilo del botón de idioma */
+    .lang-btn {
+      background: linear-gradient(145deg, #2A233A, #1C1726);
+      border: 1px solid #5A4C70;
+      border-radius: 24px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    /* Texto dentro del botón */
+    .lang-btn .lang-text {
+      color: #8E8E8E;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9em;
+      font-weight: 300;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+
+    /* Efecto hover */
+    .lang-btn:hover {
+      background: linear-gradient(145deg, #3A2F4A, #2A233A);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .lang-btn:hover .lang-text {
+      color: #fff;
+    }
+
+    /* Efecto activo (click) */
+    .lang-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    }
+
+    /* Estilo para los enlaces */
+    .blog-post a {
+      color: #8E8E8E;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .blog-post a:hover {
+      color: #fff;
+    }
+
     @media (max-width: 736px) {
       #main {
         padding: 3rem 2rem;
@@ -115,6 +178,19 @@
         left: 0.75rem;
         width: 20px;
         height: 20px;
+      }
+
+      .language-toggle {
+        top: 0.75rem;
+        right: 0.75rem;
+      }
+
+      .lang-btn {
+        padding: 0.4rem 0.8rem;
+      }
+
+      .lang-btn .lang-text {
+        font-size: 0.8em;
       }
     }
 
@@ -137,6 +213,19 @@
         width: 18px;
         height: 18px;
       }
+
+      .language-toggle {
+        top: 0.5rem;
+        right: 0.5rem;
+      }
+
+      .lang-btn {
+        padding: 0.3rem 0.6rem;
+      }
+
+      .lang-btn .lang-text {
+        font-size: 0.75em;
+      }
     }
   </style>
 </head>
@@ -147,20 +236,80 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
       </svg>
-      <span>Back</span>
+      <span data-translate="back">Back</span>
     </a>
+
+    <!-- Botón de cambio de idioma -->
+    <div class="language-toggle">
+      <button id="lang-btn" class="lang-btn">
+        <span class="lang-text">EN</span>
+      </button>
+    </div>
 
     <div class="blog-post">
       <img src="ganzosCodigo.png" alt="Goose Football Game" class="blog-cover-image">
-      <h2>Goose Football Game in 6 Days</h2>
-      <p>How did I manage to write over a thousand lines of code to create a unique video game? By blending creativity, technical skills, and the power of artificial intelligence as my ally, I developed an ambitious project: a Three.js game featuring low-poly geese playing soccer, with models crafted from scratch in Blender. This process involved integrating HTML for structure, JavaScript for interactive logic, JSON and TOML for data management, and an optimized approach to 3D rendering. AI not only sped up my workflow—helping me debug, brainstorm ideas, and structure efficient code—but also enabled me to explore innovative solutions for smooth animations and gameplay mechanics. This project showcases not just my expertise in front-end development and modern tools like Three.js, but also my ability to merge art, technology, and AI collaboration, delivering a visually striking and functional result. I’m ready to bring this same passion and versatility to new challenges.</p>
-      <br>Play it:
-      <br>
-        <p><br><a href="https://kuni3d.github.io/goosefootball/">Goose Football for PC 🖥️</a>
-        <br><a href="https://github.com/kuni3D/goosefootball">https://github.com/kuni3D/goosefootball</a></p>
-      <p><a href="https://kuni3d.github.io/GooseFootballMobile/">Goose Football Mobile 📲</a>
-        <br><a href="https://github.com/kuni3D/GooseFootballMobile">https://github.com/kuni3D/GooseFootballMobile</a></p>
+      <h2 data-translate="title">Goose Football Game in 6 Days</h2>
+      <p data-translate="description">How did I manage to write over a thousand lines of code to create a unique video game? By blending creativity, technical skills, and the power of artificial intelligence as my ally, I developed an ambitious project: a Three.js game featuring low-poly geese playing soccer, with models crafted from scratch in Blender. This process involved integrating HTML for structure, JavaScript for interactive logic, JSON and TOML for data management, and an optimized approach to 3D rendering. AI not only sped up my workflow—helping me debug, brainstorm ideas, and structure efficient code—but also enabled me to explore innovative solutions for smooth animations and gameplay mechanics. This project showcases not just my expertise in front-end development and modern tools like Three.js, but also my ability to merge art, technology, and AI collaboration, delivering a visually striking and functional result. I’m ready to bring this same passion and versatility to new challenges.</p>
+      <br><span data-translate="play_it">Play it:</span><br>
+      <p><br><a href="https://kuni3d.github.io/goosefootball/" data-translate="pc_link">Goose Football for PC 🖥️</a>
+      <br><a href="https://github.com/kuni3D/goosefootball">https://github.com/kuni3D/goosefootball</a></p>
+      <p><a href="https://kuni3d.github.io/GooseFootballMobile/" data-translate="mobile_link">Goose Football Mobile 📲</a>
+      <br><a href="https://github.com/kuni3D/GooseFootballMobile">https://github.com/kuni3D/GooseFootballMobile</a></p>
     </div>
   </div>
+
+  <script>
+    // Objeto con traducciones
+    const translations = {
+      en: {
+        back: "Back",
+        title: "Goose Football Game in 6 Days",
+        description: "How did I manage to write over a thousand lines of code to create a unique video game? By blending creativity, technical skills, and the power of artificial intelligence as my ally, I developed an ambitious project: a Three.js game featuring low-poly geese playing soccer, with models crafted from scratch in Blender. This process involved integrating HTML for structure, JavaScript for interactive logic, JSON and TOML for data management, and an optimized approach to 3D rendering. AI not only sped up my workflow—helping me debug, brainstorm ideas, and structure efficient code—but also enabled me to explore innovative solutions for smooth animations and gameplay mechanics. This project showcases not just my expertise in front-end development and modern tools like Three.js, but also my ability to merge art, technology, and AI collaboration, delivering a visually striking and functional result. I’m ready to bring this same passion and versatility to new challenges.",
+        play_it: "Play it:",
+        pc_link: "Goose Football for PC 🖥️",
+        mobile_link: "Goose Football Mobile 📲"
+      },
+      es: {
+        back: "Volver",
+        title: "Juego de Fútbol de Gansos en 6 Días",
+        description: "¿Cómo logré escribir más de mil líneas de código para crear un videojuego único? Combinando creatividad, habilidades técnicas y el poder de la inteligencia artificial como mi aliada, desarrollé un proyecto ambicioso: un juego en Three.js con gansos de baja poligonización jugando al fútbol, con modelos creados desde cero en Blender. Este proceso involucró la integración de HTML para la estructura, JavaScript para la lógica interactiva, JSON y TOML para la gestión de datos, y un enfoque optimizado para el renderizado 3D. La IA no solo aceleró mi flujo de trabajo —ayudándome a depurar, generar ideas y estructurar código eficiente— sino que también me permitió explorar soluciones innovadoras para animaciones fluidas y mecánicas de juego. Este proyecto demuestra no solo mi experiencia en desarrollo front-end y herramientas modernas como Three.js, sino también mi capacidad para fusionar arte, tecnología y colaboración con IA, entregando un resultado visualmente impactante y funcional. Estoy listo para llevar esta misma pasión y versatilidad a nuevos desafíos.",
+        play_it: "Juega:",
+        pc_link: "Fútbol de Gansos para PC 🖥️",
+        mobile_link: "Fútbol de Gansos Móvil 📲"
+      }
+    };
+
+    // Estado inicial del idioma
+    let currentLang = 'en';
+
+    // Obtener elementos
+    const langBtn = document.getElementById('lang-btn');
+    const langText = langBtn.querySelector('.lang-text');
+    const translatableElements = document.querySelectorAll('[data-translate]');
+
+    // Función para cambiar el idioma
+    function toggleLanguage() {
+      // Cambiar idioma
+      currentLang = currentLang === 'en' ? 'es' : 'en';
+
+      // Actualizar texto del botón
+      langText.textContent = currentLang.toUpperCase();
+
+      // Actualizar textos traducibles
+      translatableElements.forEach(element => {
+        const key = element.getAttribute('data-translate');
+        element.textContent = translations[currentLang][key];
+      });
+
+      // Actualizar el atributo lang del HTML
+      document.documentElement.lang = currentLang;
+    }
+
+    // Evento click para el botón
+    langBtn.addEventListener('click', toggleLanguage);
+
+    // Inicializar con inglés
+    toggleLanguage();
+  </script>
 </body>
 </html>
