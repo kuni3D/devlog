@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catito con Three.js y Rapier</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.163.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.163.0/examples/jsm/",
+                "@dimforge/rapier3d": "https://cdn.jsdelivr.net/npm/@dimforge/rapier3d-compat@0.15.0/+esm"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import * as RAPIER from '@dimforge/rapier3d';
+
+        const gravity = { x: 0.0, y: -9.8, z: 0.0 };
+        let physicsWorld;
+        let characterController;
+        let characterCollider;
+        let characterRigidBody;
+
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.Fog(0x5b5b5b, 5, 25);
+        scene.background = new THREE.Color(0x5b5b5b);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const baseCameraOffset = new THREE.Vector3(0, 5, 7);
+        const minCameraX = -13;
+        const maxCameraX = 16;
+        const minCameraZ = -10;
+        const maxCameraZ = 30;
+        const cameraLerpFactor = 0.6;
+        let dynamicCameraOffsetZ = baseCameraOffset.z;
+        const maxDynamicOffsetZ = 15;
+        let dynamicCameraOffsetY = baseCameraOffset.y;
+        const maxDynamicOffsetY = 7;
+        const offsetLerpFactor = 0.1;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.body.appendChild(renderer.domElement);
+
+        const light = new THREE.DirectionalLight(0xCBD5E0, 0.2);
+        light.position.set(0, 5, 0);
+        light.castShadow = true;
+        light.shadow.mapSize.width = 2048;
+        light.shadow.mapSize.height = 2048;
+        light.shadow.camera.near = 0.1;
+        light.shadow.camera.far = 100;
+        light.shadow.camera.left = -50;
+        light.shadow.camera.right = 50;
+        light.shadow.camera.top = 50;
+        light.shadow.camera.bottom = -50;
+        light.shadow.bias = -0.0005;
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0xCBD5E0, 0.8));
+
+        let mixer, catitoRig, actions = {}, currentAction = null;
+        const clock = new THREE.Clock();
+        let mouse = new THREE.Vector2();
+        let targetBodyRotationY = 0;
+        let currentBodyRotationY = 0;
+        const bodyRotationLerpSpeed = 10;
+        let lastBaseRotationY = 0;
+
+        let salto3Timer = 0;
+        const maxSalto3Duration = 0.5;
+
+        const keys = { w: false, a: false, s: false, d: false, space: false, shift: false };
+        const speed = 3.5;
+        const stealthSpeed = speed * 0.13;
+        let targetRotationY = 0;
+        let currentRotationY = 0;
+        const rotationLerpSpeed = 9;
+        let isJumping = false;
+        let pendingJump = false;
+        let landingSlowdown = false;
+        let landingSlowdownTimer = 0;
+        const landingSlowdownDuration = 0.5;
+        const landingSlowdownFactor = 0.45;
+        let isAiming = false;
+        let isShooting = false;
+        let isShootingAnimationPlaying = false;
+        let isRunningBackward = false;
+        let jumpTime = 0;
+
+        // Nuevas variables para manejo de opacidad
+        let occludingObjects = new Map(); // Mapa para almacenar objetos y su opacidad actual
+        const opacityTransitionSpeed = 5; // Velocidad de transición de opacidad
+        const targetOpacityOccluded = 0.5; // Opacidad cuando obstruye
+        const targetOpacityNormal = 1.0; // Opacidad normal
+        let instancedMeshes = {}; // Almacenar referencias a InstancedMesh
+
+        function logMemory(label) {
+            if (window.performance && window.performance.memory) {
+                const memory = performance.memory;
+                console.log(`${label}: ${(memory.usedJSHeapSize / 1024 / 1024).toFixed(2)} MB`);
+            } else {
+                console.log(`${label}: performance.memory no disponible`);
+            }
+        }
+
+        const initEngine = async () => {
+            try {
+                await RAPIER.init();
+                console.log("WebAssembly de Rapier inicializado");
+                physicsWorld = new RAPIER.World(gravity);
+                console.log("Mundo físico creado");
+
+                const loader = new GLTFLoader();
+                loader.load('catito.glb', (gltf) => {
+                    console.log("Modelo GLB cargado:", gltf.scene);
+
+                    const allObjectNames = [];
+                    gltf.scene.traverse((child) => {
+                        if (child.name) {
+                            allObjectNames.push(child.name);
+                        }
+                    });
+                    console.log("Nombres de objetos en el GLB:", allObjectNames);
+
+                    scene.add(gltf.scene);
+
+                    const groundMesh = gltf.scene.getObjectByName('suelo');
+                    if (!groundMesh || !groundMesh.isMesh) {
+                        console.error('No se encontró el mesh "suelo" en el GLB o no es un mesh');
+                        const groundRigidBodyDesc = RAPIER.RigidBodyDesc.fixed()
+                            .setTranslation(0, 0.42, 0);
+                        const groundRigidBody = physicsWorld.createRigidBody(groundRigidBodyDesc);
+                        const groundColliderDesc = RAPIER.ColliderDesc.cuboid(50, 0.1, 50);
+                        physicsWorld.createCollider(groundColliderDesc, groundRigidBody);
+                    } else {
+                        console.log("Suelo encontrado:", groundMesh);
+                        groundMesh.receiveShadow = true;
+                        groundMesh.castShadow = false;
+                        groundMesh.visible = true;
+
+                        const geometry = groundMesh.geometry;
+                        geometry.computeBoundingBox();
+                        const box = geometry.boundingBox;
+                        if (!box) {
+                            console.error('No se pudo calcular el boundingBox para el suelo');
+                            return;
+                        }
+                        const size = new THREE.Vector3();
+                        box.getSize(size);
+                        console.log(`Tamaño del suelo: ${size.toArray()}`);
+
+                        const positionAttribute = geometry.attributes.position;
+                        const vertices = new Float32Array(positionAttribute.count * 3);
+                        groundMesh.updateMatrixWorld();
+                        const matrix = groundMesh.matrixWorld;
+                        const vertex = new THREE.Vector3();
+                        for (let i = 0; i < positionAttribute.count; i++) {
+                            vertex.set(
+                                positionAttribute.getX(i),
+                                positionAttribute.getY(i),
+                                positionAttribute.getZ(i)
+                            );
+                            vertex.applyMatrix4(matrix);
+                            vertices[i * 3] = vertex.x;
+                            vertices[i * 3 + 1] = vertex.y;
+                            vertices[i * 3 + 2] = vertex.z;
+                        }
+
+                        const indexAttribute = geometry.index;
+                        const indices = new Uint32Array(indexAttribute.count);
+                        for (let i = 0; i < indexAttribute.count; i++) {
+                            indices[i] = indexAttribute.getX(i);
+                        }
+
+                        let minY = Infinity, maxY = -Infinity;
+                        for (let i = 0; i < positionAttribute.count; i++) {
+                            const y = vertices[i * 3 + 1];
+                            minY = Math.min(minY, y);
+                            maxY = Math.max(maxY, y);
+                        }
+                        console.log(`Desnivel del suelo (global): minY=${minY}, maxY=${maxY}, diferencia=${maxY - minY}`);
+
+                        console.log(`Posición del mesh suelo: ${groundMesh.position.toArray()}`);
+                        console.log(`Rotación del mesh suelo: ${groundMesh.rotation.toArray()}`);
+                        console.log(`Escala del mesh suelo: ${groundMesh.scale.toArray()}`);
+
+                        const groundRigidBodyDesc = RAPIER.RigidBodyDesc.fixed();
+                        const groundRigidBody = physicsWorld.createRigidBody(groundRigidBodyDesc);
+                        const groundColliderDesc = RAPIER.ColliderDesc.trimesh(vertices, indices);
+                        physicsWorld.createCollider(groundColliderDesc, groundRigidBody);
+                        console.log("Colisionador trimesh creado para el suelo");
+
+                        logMemory("Tras inicializar suelo");
+                    }
+
+                    catitoRig = gltf.scene.getObjectByName('catitoRig');
+                    if (!catitoRig) {
+                        return;
+                    }
+                    console.log("catitoRig encontrado:", catitoRig);
+
+                    const groundMinY = groundMesh ? groundMesh.geometry.boundingBox.min.y : 0;
+                    const groundMaxY = groundMesh ? groundMesh.geometry.boundingBox.max.y : 0;
+                    const safeHeight = Math.max(groundMinY, groundMaxY) + groundMesh.position.y + 5;
+                    catitoRig.position.set(12, safeHeight, 0);
+                    console.log(`Posición inicial de catitoRig ajustada a y=${safeHeight} según el desnivel del suelo`);
+
+                    catitoRig.visible = true;
+                    catitoRig.traverse((child) => {
+                        if (child.isMesh) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                            child.visible = true;
+                        }
+                    });
+
+                    logMemory("Tras cargar catitoRig");
+
+                    const panelDimensions = {
+                        width: 2.4,
+                        height: 2.6,
+                        depth: 0.1
+                    };
+
+                    const groups = [
+                        { name: 'roca', count: 28, instances: [], colliderType: 'cuboid' },
+                        { name: 'piedra', count: 147, instances: [], colliderType: 'sphere' },
+                        { name: 'madera', count: 137, instances: [], colliderType: 'cuboid' },
+                        { name: 'ladrillo', count: 248, instances: [], colliderType: 'capsule' },
+                        { name: 'maderacurva', count: 6, instances: [], colliderType: 'cuboid' },
+                        { name: 'teja', count: 20, instances: [], colliderType: 'cuboid' },
+                        { name: 'reja', count: 3, instances: [], colliderType: 'cuboid' },
+                        { name: 'rock', count: 180, instances: [], colliderType: 'cuboid' },
+                        { name: 'torre', count: 2, instances: [], colliderType: 'cylinder' },
+                        { name: 'panel', count: 4, instances: [], colliderType: 'cuboid', customDimensions: panelDimensions },
+                        { name: 'arbol', count: 174, instances: [], colliderType: 'cuboid' }
+                    ];
+
+                    groups.forEach(group => {
+                        for (let i = 0; i < group.count; i++) {
+                            const possibleNames = [
+                                i === 0 ? group.name : `${group.name}.${String(i).padStart(3, '0')}`,
+                                i === 0 ? group.name : `${group.name}_${String(i).padStart(3, '0')}`,
+                                i === 0 ? group.name : `${group.name}${String(i).padStart(3, '0')}`,
+                                i === 0 ? group.name : `${group.name}.${i}`,
+                                i === 0 ? group.name : `${group.name}_${i}`
+                            ];
+
+                            let obj = null;
+                            let objName = null;
+                            for (const name of possibleNames) {
+                                obj = gltf.scene.getObjectByName(name);
+                                if (obj) {
+                                    objName = name;
+                                    break;
+                                }
+                            }
+
+                            if (obj) {
+                                group.instances.push({
+                                    position: obj.position.clone(),
+                                    scale: obj.scale.clone(),
+                                    rotation: obj.rotation.clone(),
+                                    matrix: obj.matrixWorld.clone()
+                                });
+                                obj.visible = false;
+                                console.log(`Encontrado ${objName}: posición=${obj.position.toArray()}, escala=${obj.scale.toArray()}, rotación=${obj.rotation.toArray()}`);
+                            } else {
+                                console.warn(`No se encontró objeto para ${group.name} con nombres posibles: ${possibleNames.join(', ')}`);
+                            }
+                        }
+                    });
+
+                    groups.forEach(group => {
+                        if (group.instances.length === 0) {
+                            console.warn(`No hay instancias para ${group.name}`);
+                            return;
+                        }
+
+                        const refName = group.name;
+                        const refObj = gltf.scene.getObjectByName(refName);
+                        if (!refObj || !refObj.isMesh) {
+                            console.error(`No se encontró mesh de referencia para ${group.name}`);
+                            return;
+                        }
+
+                        const geometry = refObj.geometry;
+                        let material = refObj.material;
+                        // Asegurar que el material sea compatible con transparencia
+                        if (material instanceof THREE.Material) {
+                            material = material.clone(); // Clonar para no afectar el original
+                            material.transparent = true;
+                            material.opacity = 1.0;
+                            material.needsUpdate = true;
+                        } else if (Array.isArray(material)) {
+                            material = material.map(mat => {
+                                const clonedMat = mat.clone();
+                                clonedMat.transparent = true;
+                                clonedMat.opacity = 1.0;
+                                clonedMat.needsUpdate = true;
+                                return clonedMat;
+                            });
+                        }
+
+                        const instancedMesh = new THREE.InstancedMesh(geometry, material, group.instances.length);
+                        instancedMesh.castShadow = true;
+                        instancedMesh.receiveShadow = true;
+
+                        const dummy = new THREE.Object3D();
+                        group.instances.forEach((instance, index) => {
+                            dummy.position.copy(instance.position);
+                            dummy.scale.copy(instance.scale);
+                            dummy.rotation.copy(instance.rotation);
+                            dummy.updateMatrix();
+                            instancedMesh.setMatrixAt(index, dummy.matrix);
+                        });
+
+                        instancedMesh.name = `${group.name}_instanced`;
+                        scene.add(instancedMesh);
+                        console.log(`InstancedMesh creado para ${group.name} con ${group.instances.length} instancias`);
+
+                        // Almacenar InstancedMesh para grupos relevantes
+                        if (['torre', 'panel', 'ladrillo'].includes(group.name)) {
+                            instancedMeshes[group.name] = {
+                                mesh: instancedMesh,
+                                instances: group.instances,
+                                // Para ladrillo, especificar índices objetivo
+                                targetIndices: group.name === 'ladrillo' ? Array.from({length: 124}, (_, i) => i + 124) : null
+                            };
+                            occludingObjects.set(instancedMesh, { currentOpacity: 1.0, targetOpacity: 1.0 });
+                        }
+
+                        const matrixMemoryBytes = group.instances.length * 64;
+                        console.log(`Memoria estimada para matrices de ${group.name}: ${(matrixMemoryBytes / 1024 / 1024).toFixed(4)} MB`);
+
+                        logMemory(`Tras crear InstancedMesh de ${group.name}`);
+
+                        geometry.computeBoundingBox();
+                        const box = geometry.boundingBox;
+                        if (!box) {
+                            console.error(`No se pudo calcular boundingBox para ${group.name}`);
+                            return;
+                        }
+                        const size = new THREE.Vector3();
+                        box.getSize(size);
+                        console.log(`Tamaño base de ${group.name}: ${size.toArray()}`);
+
+                        group.instances.forEach((instance, index) => {
+                            const objName = index === 0 ? group.name : `${group.name}.${String(index).padStart(3, '0')}`;
+                            let colliderDesc;
+
+                            if (group.name === 'panel') {
+                                const scaledSize = {
+                                    x: group.customDimensions.width * instance.scale.x,
+                                    y: group.customDimensions.height * instance.scale.y,
+                                    z: group.customDimensions.depth * instance.scale.z
+                                };
+                                colliderDesc = RAPIER.ColliderDesc.cuboid(
+                                    scaledSize.x / 5,
+                                    scaledSize.y / 100,
+                                    scaledSize.z / 0.13
+                                );
+                                console.log(`Creando colisionador cuboid para ${objName}: tamaño ajustado=${[scaledSize.x, scaledSize.y, scaledSize.z]}`);
+                            } else {
+                                const scaledSize = {
+                                    x: size.x * instance.scale.x * 1,
+                                    y: size.y * instance.scale.y * 1,
+                                    z: size.z * instance.scale.z * 1
+                                };
+
+                                if (group.colliderType === 'sphere') {
+                                    const adjustedSize = {
+                                        x: size.x * instance.scale.x * 0.4,
+                                        y: size.y * instance.scale.y * 0.4,
+                                        z: size.z * instance.scale.z * 0.1
+                                    };
+                                    const radius = adjustedSize.y / 2;
+                                    colliderDesc = RAPIER.ColliderDesc.ball(radius);
+                                    console.log(`Creando colisionador esfera para ${objName}: radio=${radius}`);
+                                } else if (group.colliderType === 'capsule') {
+                                    const height = scaledSize.y;
+                                    const radius = Math.max(scaledSize.x, scaledSize.z) / 4;
+                                    colliderDesc = RAPIER.ColliderDesc.capsule(height / 2, radius);
+                                    console.log(`Creando colisionador cápsula para ${objName}: altura=${height}, radio=${radius}`);
+                                } else if (group.colliderType === 'cuboid') {
+                                    colliderDesc = RAPIER.ColliderDesc.cuboid(
+                                        scaledSize.x / 4,
+                                        scaledSize.y / 2.5,
+                                        scaledSize.z / 2
+                                    );
+                                    console.log(`Creando colisionador cuboid para ${objName}: tamaño=${[scaledSize.x, scaledSize.y, scaledSize.z]}`);
+                                } else if (group.colliderType === 'cylinder') {
+                                    const height = scaledSize.y * 1;
+                                    const radius = size.x / 1.75 * 1.3;
+                                    colliderDesc = RAPIER.ColliderDesc.cylinder(height / 2, radius);
+                                    console.log(`Creando colisionador cilindro para ${objName}: altura=${height}, radio=${radius}`);
+                                }
+                            }
+
+                            if (colliderDesc) {
+                                const quaternion = new THREE.Quaternion();
+                                quaternion.setFromEuler(instance.rotation);
+
+                                colliderDesc
+                                    .setTranslation(instance.position.x, instance.position.y, instance.position.z)
+                                    .setRotation({ w: quaternion.w, x: quaternion.x, y: quaternion.y, z: quaternion.z });
+
+                                const rigidBodyDesc = RAPIER.RigidBodyDesc.fixed();
+                                const rigidBody = physicsWorld.createRigidBody(rigidBodyDesc);
+                                physicsWorld.createCollider(colliderDesc, rigidBody);
+
+                                console.log(`Colisionador ${group.colliderType} creado para ${objName} en posición ${instance.position.toArray()}`);
+                            } else {
+                                console.error(`No se pudo crear colisionador para ${objName}`);
+                            }
+                        });
+
+                        logMemory(`Tras crear colisionadores de ${group.name}`);
+                    });
+
+                    mixer = new THREE.AnimationMixer(catitoRig);
+                    const clips = gltf.animations;
+                    console.log('Animaciones en el GLB:', clips.map(clip => clip.name));
+
+                    actions.idle2 = mixer.clipAction(THREE.AnimationClip.findByName(clips, 'idle2'));
+                    actions.corre2 = mixer.clipAction(THREE.AnimationClip.findByName(clips, 'corre2'));
+                    actions.salto1 = mixer.clipAction(THREE.AnimationClip.findByName(clips, 'salto1'));
+                    actions.salto2 = mixer.clipAction(THREE.AnimationClip.findByName(clips, 'salto2'));
+                    actions.salto3 = mixer.clipAction(THREE.AnimationClip.findByName(clips, 'salto3'));
+                    actions.salto4 = mixer.clipAction(THREE.AnimationClip.findByName(clips, 'salto4'));
+                    actions.apunta = mixer.clipAction(THREE.AnimationClip.findByName(clips, 'apunta'));
+                    actions.apuntaidle = mixer.clipAction(THREE.AnimationClip.findByName(clips, 'apuntaidle'));
+                    actions.dispara = mixer.clipAction(THREE.AnimationClip.findByName(clips, 'dispara'));
+
+                    actions.idle2.setLoop(THREE.LoopRepeat);
+                    actions.corre2.setLoop(THREE.LoopRepeat);
+                    actions.salto1.setLoop(THREE.LoopOnce);
+                    actions.salto2.setLoop(THREE.LoopOnce);
+                    actions.salto3.setLoop(THREE.LoopOnce);
+                    actions.salto4.setLoop(THREE.LoopOnce);
+                    actions.apunta.setLoop(THREE.LoopRepeat);
+                    actions.apuntaidle.setLoop(THREE.LoopRepeat);
+                    actions.dispara.setLoop(THREE.LoopOnce);
+
+                    Object.values(actions).forEach(action => action.clampWhenFinished = true);
+
+                    if (actions.idle2) {
+                        currentAction = actions.idle2;
+                        currentAction.play();
+                        console.log("Animación idle2 iniciada");
+                    } else {
+                        console.error("No se encontró la animación idle2");
+                    }
+
+                    if (!actions.apunta || !actions.apuntaidle || !actions.dispara) {
+                        console.warn("Una o más animaciones (apunta, apuntaidle, dispara) no se encontraron en el GLB");
+                    }
+
+                    logMemory("Tras configurar animaciones");
+
+                    createCharacterCollider();
+
+                    logMemory("Tras cargar todo el modelo");
+                }, undefined, (error) => {
+                    console.error('Error al cargar el modelo GLB:', error);
+                });
+            } catch (error) {
+                console.error("Error al inicializar el motor:", error);
+                throw error;
+            }
+        };
+
+        function createCharacterCollider() {
+            if (!catitoRig || !physicsWorld) {
+                console.error("No se puede crear colisionador: catitoRig o physicsWorld no están definidos");
+                return;
+            }
+
+            console.log("Creando colisionador para el personaje en posición:", catitoRig.position);
+            const characterRigidBodyDesc = RAPIER.RigidBodyDesc.dynamic()
+                .setTranslation(catitoRig.position.x, catitoRig.position.y + 1, catitoRig.position.z)
+                .setCanSleep(false)
+                .lockRotations()
+                .setLinearDamping(0.0);
+            characterRigidBody = physicsWorld.createRigidBody(characterRigidBodyDesc);
+
+            const characterColliderDesc = RAPIER.ColliderDesc.capsule(0.5, 0.3);
+            characterCollider = physicsWorld.createCollider(characterColliderDesc, characterRigidBody);
+
+            characterController = physicsWorld.createCharacterController(0.15);
+            characterController.enableAutostep(0.5, 0.2, true);
+            characterController.enableSnapToGround(0.7);
+            characterController.setApplyImpulsesToDynamicBodies(true);
+            characterController.setUp({ x: 0, y: 1, z: 0 });
+            console.log("Colisionador y controlador de personaje creados");
+
+            logMemory("Tras crear colisionador del personaje");
+        }
+
+        window.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+            if (['w', 'a', 's', 'd', ' ', 'shift'].includes(key)) {
+                console.log(`Tecla presionada: ${key}`);
+            }
+            switch (key) {
+                case 'w': keys.w = true; break;
+                case 'a': keys.a = true; break;
+                case 's': keys.s = true; break;
+                case 'd': keys.d = true; break;
+                case ' ': keys.space = true; break;
+                case 'shift': keys.shift = true; break;
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            const key = e.key.toLowerCase();
+            if (['w', 'a', 's', 'd', ' ', 'shift'].includes(key)) {
+                console.log(`Tecla liberada: ${key}`);
+            }
+            switch (key) {
+                case 'w': keys.w = false; break;
+                case 'a': keys.a = false; break;
+                case 's': keys.s = false; break;
+                case 'd': keys.d = false; break;
+                case ' ': keys.space = false; break;
+                case 'shift': keys.shift = false; break;
+            }
+        });
+
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = -(event.clientX / window.innerWidth) * 2 + 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        window.addEventListener('mousedown', (event) => {
+            if (event.button === 2) {
+                isAiming = true;
+                console.log("Botón derecho presionado: iniciando apunta");
+            } else if (event.button === 0 && !isShootingAnimationPlaying) {
+                isShooting = true;
+                console.log("Botón izquierdo clicado: iniciando dispara");
+            }
+        });
+
+        window.addEventListener('mouseup', (event) => {
+            if (event.button === 2) {
+                isAiming = false;
+                console.log("Botón derecho liberado: deteniendo apunta");
+            }
+        });
+
+        window.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+        });
+
+        function switchAnimation(newAction) {
+            if (!newAction) {
+                console.error('Intento de reproducir una acción nula');
+                return;
+            }
+            if (currentAction === newAction && newAction.isRunning()) {
+                console.log(`Animación ${newAction._clip.name} ya está reproduciéndose`);
+                return;
+            }
+            if (currentAction) {
+                currentAction.fadeOut(0.2);
+                console.log(`Deteniendo animación anterior: ${currentAction._clip.name}`);
+            }
+            newAction.reset().fadeIn(0.2).play();
+            console.log(`Iniciando animación: ${newAction._clip.name}`);
+            currentAction = newAction;
+            salto3Timer = (newAction === actions.salto3) ? salto3Timer : 0;
+            isShootingAnimationPlaying = (newAction === actions.dispara);
+        }
+
+        function switchToStealth() {
+            if (currentAction === actions.corre2 && actions.idle2.isRunning()) return;
+            actions.idle2.reset().play();
+            actions.corre2.reset().play();
+            actions.idle2.timeScale = 0.5;
+            actions.corre2.timeScale = 0.5;
+            actions.idle2.weight = 0.5;
+            actions.corre2.weight = 0.5;
+            currentAction = actions.corre2;
+            console.log("Modo sigiloso activado");
+        }
+
+        function resetAnimationWeights() {
+            actions.idle2.weight = 1.0;
+            actions.corre2.weight = 1.0;
+            actions.idle2.timeScale = 1.0;
+            actions.corre2.timeScale = 1.0;
+        }
+
+        function startJump() {
+            if (!isJumping && characterController && characterController.computedGrounded() && keys.space) {
+                console.log('Iniciando salto, estado isJumping:', isJumping);
+                isJumping = true;
+                pendingJump = false;
+                jumpTime = 0;
+                characterRigidBody.applyImpulse({ x: 0, y: 2.5, z: 0 }, true);
+                switchAnimation(actions.salto1);
+
+                const onFinished = function(e) {
+                    console.log(`Animación terminada: ${e.action._clip.name}`);
+                    if (e.action === actions.salto1) {
+                        switchAnimation(actions.salto2);
+                    } else if (e.action === actions.salto2) {
+                        switchAnimation(actions.salto3);
+                    }
+                    mixer.removeEventListener('finished', onFinished);
+                };
+                mixer.addEventListener('finished', onFinished);
+            } else if (keys.space && isShootingAnimationPlaying) {
+                pendingJump = true;
+                console.log('Salto pendiente registrado durante dispara');
+            } else {
+                console.warn(`No se puede saltar: isJumping=${isJumping}, grounded=${characterController ? characterController.computedGrounded() : false}, space=${keys.space}, isShootingAnimationPlaying=${isShootingAnimationPlaying}`);
+            }
+        }
+
+        function isCharacterOnGround() {
+            if (!characterRigidBody || !physicsWorld) return false;
+
+            const position = characterRigidBody.translation();
+            const rayOrigin = new RAPIER.Vector3(position.x, position.y - 0.5, position.z);
+            const rayDir = new RAPIER.Vector3(0, -1, 0);
+            const rayLength = 0.3;
+
+            const ray = new RAPIER.Ray(rayOrigin, rayDir);
+            const hit = physicsWorld.castRay(ray, rayLength, true, null, null, characterCollider);
+
+            if (hit && hit.timeOfImpact <= rayLength) {
+                console.log(`Raycast detectó suelo a ${hit.timeOfImpact} unidades`);
+                return true;
+            }
+            return false;
+        }
+
+        function updateOcclusionOpacity(delta) {
+            if (!catitoRig) return;
+
+            // Limitar raycasting a cada ~2 fotogramas (aproximadamente 30 FPS)
+            if (clock.getElapsedTime() % 0.066 > 0.033) return;
+
+            const raycaster = new THREE.Raycaster();
+            const characterPos = catitoRig.position.clone();
+            characterPos.y += 1; // Apuntar al centro del personaje
+            const direction = characterPos.clone().sub(camera.position).normalize();
+            raycaster.set(camera.position, direction);
+
+            const intersects = raycaster.intersectObjects(Object.values(instancedMeshes).map(data => data.mesh), false);
+
+            // Resetear opacidad a normal
+            occludingObjects.forEach((data, mesh) => {
+                data.targetOpacity = targetOpacityNormal;
+            });
+
+            // Procesar intersecciones con límites de distancia
+            const minDistance = 2; // Evita opacidad si el personaje está demasiado cerca (delante)
+            const maxDistance = 10; // Máxima distancia para activar opacidad
+            for (const intersect of intersects) {
+                try {
+                    // Verificar distancia
+                    if (intersect.distance < minDistance || intersect.distance > maxDistance) {
+                        console.log(`Intersección ignorada: distancia=${intersect.distance.toFixed(2)} (fuera de rango ${minDistance}-${maxDistance})`);
+                        continue;
+                    }
+
+                    // Verificar que el objeto está entre la cámara y el personaje
+                    const distanceToCharacter = camera.position.distanceTo(characterPos);
+                    if (intersect.distance > distanceToCharacter) {
+                        console.log(`Intersección ignorada: objeto a ${intersect.distance.toFixed(2)} está detrás del personaje a ${distanceToCharacter.toFixed(2)}`);
+                        continue;
+                    }
+
+                    const mesh = intersect.object;
+                    const groupName = mesh.name.replace('_instanced', '');
+                    let isTargetInstance = false;
+
+                    if (groupName === 'ladrillo') {
+                        const instanceId = intersect.instanceId;
+                        if (instanceId !== undefined && instancedMeshes['ladrillo'].targetIndices.includes(instanceId)) {
+                            isTargetInstance = true;
+                        }
+                    } else if (['torre', 'panel'].includes(groupName)) {
+                        isTargetInstance = true;
+                    }
+
+                    if (isTargetInstance) {
+                        const data = occludingObjects.get(mesh);
+                        if (data) {
+                            data.targetOpacity = targetOpacityOccluded;
+                            console.log(`Objeto ${mesh.name} (instancia ${intersect.instanceId || 'N/A'}) a ${intersect.distance.toFixed(2)} unidades, opacidad a ${targetOpacityOccluded}`);
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error procesando intersección en ${intersect.object?.name || 'desconocido'}:`, error);
+                }
+            }
+
+            // Actualizar opacidad suavemente
+            occludingObjects.forEach((data, mesh) => {
+                data.currentOpacity = THREE.MathUtils.lerp(data.currentOpacity, data.targetOpacity, opacityTransitionSpeed * delta);
+                if (Array.isArray(mesh.material)) {
+                    mesh.material.forEach(mat => {
+                        mat.opacity = data.currentOpacity;
+                        mat.needsUpdate = true;
+                    });
+                } else {
+                    mesh.material.opacity = data.currentOpacity;
+                    mesh.material.needsUpdate = true;
+                }
+            });
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const delta = clock.getDelta();
+
+            console.log(`Estado: isJumping=${isJumping}, pendingJump=${pendingJump}, isShootingAnimationPlaying=${isShootingAnimationPlaying}, currentAction=${currentAction?._clip?.name || 'none'}`);
+
+            if (physicsWorld && characterRigidBody) {
+                physicsWorld.step();
+
+                const position = characterRigidBody.translation();
+                if (catitoRig) {
+                    catitoRig.position.set(position.x, position.y - 0.8, position.z);
+                } else {
+                    console.warn("catitoRig no definido en animate");
+                }
+
+                let moving = false;
+                let movement = new THREE.Vector3(0, 0, 0);
+
+                let currentSpeed = speed;
+                if (landingSlowdown) {
+                    currentSpeed *= landingSlowdownFactor;
+                    landingSlowdownTimer -= delta;
+                    if (landingSlowdownTimer <= 0) {
+                        landingSlowdown = false;
+                        console.log('Velocidad normal restaurada');
+                    }
+                }
+
+                if (keys.w) { movement.z = keys.shift ? -stealthSpeed : -currentSpeed; moving = true; }
+                if (keys.s) { movement.z = keys.shift ? stealthSpeed : currentSpeed; moving = true; }
+                if (keys.a) { movement.x = keys.shift ? -stealthSpeed : -currentSpeed; moving = true; }
+                if (keys.d) { movement.x = keys.shift ? stealthSpeed : currentSpeed; moving = true; }
+
+                isRunningBackward = keys.s && !keys.w && isAiming;
+
+                if (moving) {
+                    console.log("Movimiento detectado:", movement);
+                }
+
+                if (characterController && characterCollider) {
+                    const moveVec = { x: movement.x * delta, y: 0, z: movement.z * delta };
+                    characterController.computeColliderMovement(characterCollider, moveVec);
+                    const correctedMovement = characterController.computedMovement();
+                    characterRigidBody.setLinvel({
+                        x: correctedMovement.x / delta,
+                        y: characterRigidBody.linvel().y,
+                        z: correctedMovement.z / delta
+                    }, true);
+                } else {
+                    console.warn("characterController o characterCollider no definidos");
+                }
+
+                if (catitoRig) {
+                    let baseRotationY = 0;
+                    if (moving) {
+                        if (isRunningBackward && (keys.a || keys.d) && !(keys.a && keys.d)) {
+                            if (keys.a) {
+                                targetRotationY = Math.PI / 2;
+                                console.log("S + Click Derecho + A: Mirando hacia la derecha");
+                            } else if (keys.d) {
+                                targetRotationY = -Math.PI / 2;
+                                console.log("S + Click Derecho + D: Mirando hacia la izquierda");
+                            }
+                        } else {
+                            let rotationMovement = movement.clone();
+                            if (isRunningBackward) {
+                                rotationMovement.z = -rotationMovement.z;
+                                console.log("Ajustando rotación para mirar hacia W mientras corre hacia atrás");
+                            }
+                            targetRotationY = Math.atan2(rotationMovement.x, rotationMovement.z);
+                            console.log(`Rotación calculada con atan2: targetRotationY=${targetRotationY.toFixed(2)}`);
+                        }
+
+                        let deltaAngle = targetRotationY - currentRotationY;
+                        while (deltaAngle > Math.PI) deltaAngle -= 2 * Math.PI;
+                        while (deltaAngle < -Math.PI) deltaAngle += 2 * Math.PI;
+                        currentRotationY += deltaAngle * rotationLerpSpeed * delta;
+                        baseRotationY = currentRotationY;
+                        console.log(`Rotación WASD calculada: baseRotationY=${baseRotationY.toFixed(2)}`);
+                    } else {
+                        baseRotationY = currentRotationY;
+                    }
+
+                    const rotationChange = Math.abs(baseRotationY - lastBaseRotationY);
+                    if (rotationChange > Math.PI / 2) {
+                        console.log(`Cambio significativo en rotación detectado: de ${lastBaseRotationY.toFixed(2)} a ${baseRotationY.toFixed(2)}, reseteando currentBodyRotationY`);
+                        currentBodyRotationY = 0;
+                    }
+                    lastBaseRotationY = baseRotationY;
+
+                    const maxBodyAngle = Math.PI / 2;
+                    const mouseXAdjusted = -mouse.x * Math.cos(baseRotationY);
+                    targetBodyRotationY = mouseXAdjusted * maxBodyAngle;
+                    currentBodyRotationY = THREE.MathUtils.lerp(currentBodyRotationY, targetBodyRotationY, bodyRotationLerpSpeed * delta);
+
+                    catitoRig.rotation.y = baseRotationY + currentBodyRotationY;
+                } else {
+                    console.warn(`No se puede rotar cuerpo: catitoRig=${!!catitoRig}`);
+                }
+
+                if (isJumping) {
+                    jumpTime += delta;
+                    const velocityY = characterRigidBody.linvel().y;
+                    const isGrounded = characterController && characterController.computedGrounded();
+                    const isGroundedByRaycast = isCharacterOnGround();
+
+                    console.log(`Salto: tiempo=${jumpTime.toFixed(2)}s, velocityY=${velocityY.toFixed(2)}, grounded=${isGrounded}, raycast=${isGroundedByRaycast}`);
+
+                    if (currentAction === actions.salto3) {
+                        salto3Timer += delta;
+                    }
+
+                    if (currentAction === actions.salto2 && velocityY < -0.1 && currentAction !== actions.salto3) {
+                        console.log(`Transicionando a salto3: velocityY=${velocityY}`);
+                        switchAnimation(actions.salto3);
+                    } else if (currentAction === actions.salto3 && isGrounded) {
+                        console.log(`Aterrizaje normal detectado en salto3: velocityY=${velocityY}`);
+                        switchAnimation(actions.salto4);
+                        actions.salto4.timeScale = 1.5;
+                        landingSlowdown = true;
+                        landingSlowdownTimer = landingSlowdownDuration;
+                        isJumping = false;
+                        pendingJump = false;
+                        jumpTime = 0;
+
+                        const onSalto4Finished = function(e) {
+                            if (e.action === actions.salto4) {
+                                console.log('Salto4 terminado, finalizando salto');
+                                if (isAiming && actions.apuntaidle && !moving) {
+                                    switchAnimation(actions.apuntaidle);
+                                } else if (isAiming && actions.apunta && moving) {
+                                    switchAnimation(actions.apunta);
+                                } else if (keys.w || keys.a || keys.s || keys.d) {
+                                    switchAnimation(actions.corre2);
+                                } else {
+                                    switchAnimation(actions.idle2);
+                                }
+                                mixer.removeEventListener('finished', onSalto4Finished);
+                            }
+                        };
+                        mixer.addEventListener('finished', onSalto4Finished);
+                    } else if ((currentAction === actions.salto1 || currentAction === actions.salto2 || currentAction === actions.salto3) && (isGrounded || isGroundedByRaycast) && Math.abs(velocityY) < 0.2) {
+                        console.log(`Interrupción por impacto en ${currentAction._clip.name}: velocityY=${velocityY}, grounded=${isGrounded}, raycast=${isGroundedByRaycast}`);
+                        isJumping = false;
+                        pendingJump = false;
+                        jumpTime = 0;
+                        landingSlowdown = true;
+                        landingSlowdownTimer = landingSlowdownDuration;
+                        if (isAiming && actions.apuntaidle && !moving) {
+                            switchAnimation(actions.apuntaidle);
+                        } else if (isAiming && actions.apunta && moving) {
+                            switchAnimation(actions.apunta);
+                        } else if (keys.w || keys.a || keys.s || keys.d) {
+                            switchAnimation(actions.corre2);
+                        } else {
+                            switchAnimation(actions.idle2);
+                        }
+                    }
+                } else {
+                    if (isShooting && actions.dispara && !isShootingAnimationPlaying && !isJumping) {
+                        switchAnimation(actions.dispara);
+                        isShooting = false;
+
+                        const onDisparaFinished = function(e) {
+                            if (e.action === actions.dispara) {
+                                console.log('Animación dispara terminada');
+                                isShootingAnimationPlaying = false;
+                                if (pendingJump && characterController && characterController.computedGrounded() && !isJumping) {
+                                    console.log('Ejecutando salto pendiente después de dispara');
+                                    startJump();
+                                } else if (!isJumping) {
+                                    if (isAiming && actions.apuntaidle && !moving) {
+                                        switchAnimation(actions.apuntaidle);
+                                    } else if (isAiming && actions.apunta && moving) {
+                                        switchAnimation(actions.apunta);
+                                    } else if (keys.w || keys.a || keys.s || keys.d) {
+                                        switchAnimation(actions.corre2);
+                                    } else {
+                                        switchAnimation(actions.idle2);
+                                    }
+                                }
+                                mixer.removeEventListener('finished', onDisparaFinished);
+                            }
+                        };
+                        mixer.addEventListener('finished', onDisparaFinished);
+                    } else if (!isShootingAnimationPlaying && !isJumping) {
+                        if (isAiming && actions.apunta && actions.apuntaidle) {
+                            if (!moving && currentAction !== actions.apuntaidle) {
+                                switchAnimation(actions.apuntaidle);
+                            } else if (moving && currentAction !== actions.apunta) {
+                                switchAnimation(actions.apunta);
+                            }
+                        } else if (moving) {
+                            if (keys.shift) switchToStealth();
+                            else {
+                                resetAnimationWeights();
+                                if (currentAction !== actions.corre2) {
+                                    switchAnimation(actions.corre2);
+                                }
+                                actions.corre2.timeScale = 1.0;
+                            }
+                        } else {
+                            resetAnimationWeights();
+                            if (currentAction !== actions.idle2) {
+                                switchAnimation(actions.idle2);
+                            }
+                        }
+                    }
+
+                    if (characterController && characterController.computedGrounded() && isJumping) {
+                        console.warn('Restableciendo isJumping: personaje en el suelo pero isJumping=true');
+                        isJumping = false;
+                        pendingJump = false;
+                        jumpTime = 0;
+                        if (isAiming && actions.apuntaidle && !moving) {
+                            switchAnimation(actions.apuntaidle);
+                        } else if (isAiming && actions.apunta && moving) {
+                            switchAnimation(actions.apunta);
+                        } else if (keys.w || keys.a || keys.s || keys.d) {
+                            switchAnimation(actions.corre2);
+                        } else {
+                            switchAnimation(actions.idle2);
+                        }
+                    }
+
+                    if (keys.space) {
+                        startJump();
+                    }
+                }
+
+                // Actualizar opacidad de objetos que obstruyen
+                updateOcclusionOpacity(delta);
+            } else {
+                console.warn("physicsWorld o characterRigidBody no definidos en animate");
+            }
+
+            if (mixer) {
+                mixer.update(delta);
+            } else {
+                console.warn("mixer no definido en animate");
+            }
+
+            if (catitoRig) {
+                const desiredPosition = new THREE.Vector3().copy(catitoRig.position);
+
+                const thresholdZ = maxCameraZ - baseCameraOffset.z;
+                if (catitoRig.position.z > thresholdZ) {
+                    const extraDistance = catitoRig.position.z - thresholdZ;
+                    const targetOffsetZ = Math.min(baseCameraOffset.z + extraDistance, maxDynamicOffsetZ);
+                    dynamicCameraOffsetZ = THREE.MathUtils.lerp(dynamicCameraOffsetZ, targetOffsetZ, offsetLerpFactor);
+                    const targetOffsetY = maxDynamicOffsetY;
+                    dynamicCameraOffsetY = THREE.MathUtils.lerp(dynamicCameraOffsetY, targetOffsetY, offsetLerpFactor);
+                    console.log(`Ajustando offsets - Z: ${dynamicCameraOffsetZ.toFixed(2)}, Y: ${dynamicCameraOffsetY.toFixed(2)}, personaje z: ${catitoRig.position.z.toFixed(2)}`);
+                } else {
+                    dynamicCameraOffsetZ = THREE.MathUtils.lerp(dynamicCameraOffsetZ, baseCameraOffset.z, offsetLerpFactor);
+                    dynamicCameraOffsetY = THREE.MathUtils.lerp(dynamicCameraOffsetY, baseCameraOffset.y, offsetLerpFactor);
+                    console.log(`Restaurando offsets - Z: ${dynamicCameraOffsetZ.toFixed(2)}, Y: ${dynamicCameraOffsetY.toFixed(2)}, personaje z: ${catitoRig.position.z.toFixed(2)}`);
+                }
+
+                desiredPosition.x = Math.max(minCameraX, Math.min(maxCameraX, catitoRig.position.x + baseCameraOffset.x));
+                desiredPosition.y = catitoRig.position.y + dynamicCameraOffsetY;
+                desiredPosition.z = Math.max(minCameraZ, Math.min(maxCameraZ, catitoRig.position.z + dynamicCameraOffsetZ));
+
+                camera.position.lerp(desiredPosition, cameraLerpFactor);
+
+                const lookAtPosition = catitoRig.position.clone();
+                lookAtPosition.y += 1;
+                if (catitoRig.position.z > thresholdZ) {
+                    const direction = new THREE.Vector3(0, 0, -1);
+                    lookAtPosition.copy(camera.position).add(direction.multiplyScalar(10));
+                    lookAtPosition.y = catitoRig.position.y + 1;
+                }
+                camera.lookAt(lookAtPosition);
+
+                console.log(`Posición deseada: ${desiredPosition.toArray().map(v => v.toFixed(2))}, cámara: ${camera.position.toArray().map(v => v.toFixed(2))}, mirando a: ${lookAtPosition.toArray().map(v => v.toFixed(2))}`);
+            } else {
+                console.warn("Camera no actualizada: catitoRig no definido");
+                camera.position.set(0, 15, 10);
+                camera.lookAt(0, 0, 0);
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        initEngine().then(() => {
+            animate();
+        }).catch((error) => {
+            console.error('Error al inicializar el juego:', error);
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>

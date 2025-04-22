@@ -25,8 +25,8 @@
     }
 
     #main {
-      background: rgba(18, 18, 18, 0.9); /* Fondo semi-transparente para que el SVG sea visible detrás */
-      max-width: 55rem; /* Reducimos el ancho para que más área del SVG sea visible */
+      background: rgba(18, 18, 18, 0.9);
+      max-width: 55rem;
       margin: 0 auto;
       padding: 2rem 4rem;
       border-radius: 1px;
@@ -65,19 +65,18 @@
       text-align: center;
     }
 
-    /* Estilo para la flecha de regreso */
     .back-arrow {
-      position: fixed; /* Cambiado de absolute a fixed */
+      position: fixed;
       top: 1rem;
       left: 1rem;
-      display: flex; /* Mantenemos flex para alinear */
-      align-items: center; /* Centra verticalmente */
-      gap: 0.5rem; /* Reducimos el espacio a algo más razonable */
-      z-index: 1000; /* Asegura que esté por encima de otros elementos */
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 1000;
     }
 
     .back-arrow svg {
-      width: 24px; /* Asegura que el SVG tenga tamaño */
+      width: 24px;
       height: 24px;
       fill: #5A4C70;
       transition: fill 0.3s ease;
@@ -98,17 +97,15 @@
       color: #8E8E8E;
     }
 
-    /* Contenedor del botón de idioma */
     .language-toggle {
-      position: fixed; /* Cambiado de absolute a fixed */
+      position: fixed;
       top: 1rem;
       right: 1rem;
       display: flex;
       align-items: center;
-      z-index: 1000; /* Asegura que esté por encima de otros elementos */
+      z-index: 1000;
     }
 
-    /* Estilo del botón de idioma */
     .lang-btn {
       background: linear-gradient(145deg, #2A233A, #1C1726);
       border: 1px solid #5A4C70;
@@ -122,7 +119,6 @@
       transition: all 0.3s ease;
     }
 
-    /* Texto dentro del botón */
     .lang-btn .lang-text {
       color: #8E8E8E;
       font-family: 'Inter', sans-serif;
@@ -132,7 +128,6 @@
       transition: color 0.3s ease;
     }
 
-    /* Efecto hover */
     .lang-btn:hover {
       background: linear-gradient(145deg, #3A2F4A, #2A233A);
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.2);
@@ -143,7 +138,6 @@
       color: #fff;
     }
 
-    /* Efecto activo (click) */
     .lang-btn:active {
       transform: translateY(0);
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
@@ -151,15 +145,42 @@
 
     .blog-video {
       display: block;
-      max-width: 100%; /* Asegura que el video no se desborde */
-      width: 500px; /* Mismo ancho que la imagen para consistencia */
-      height: auto; /* Mantiene la proporción */
-      margin: 2rem auto; /* Centra el video y añade espacio arriba/abajo */
-      border-radius: 8px; /* Bordes redondeados como la imagen */
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra sutil para profundidad */
+      max-width: 100%;
+      width: 500px;
+      height: auto;
+      margin: 2rem auto 0.5rem auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
-    /* Ajustes para pantallas más pequeñas */
+    .video-description {
+      color: #8E8E8E;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9em;
+      line-height: 1.6;
+      font-weight: 300;
+      margin: 0.5rem auto 2rem auto;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    .game-container {
+      display: block;
+      max-width: 100%;
+      width: 600px;
+      height: 400px;
+      margin: 2rem auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .game-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
     @media (max-width: 736px) {
       #main {
         padding: 3rem 2rem;
@@ -174,7 +195,17 @@
       }
 
       .blog-video {
-        width: 250px; /* Mismo ancho que la imagen en pantallas pequeñas */
+        width: 250px;
+      }
+
+      .video-description {
+        font-size: 0.8em;
+        max-width: 250px;
+      }
+
+      .game-container {
+        width: 300px;
+        height: 200px;
       }
 
       .back-arrow {
@@ -212,7 +243,17 @@
       }
 
       .blog-video {
-        width: 200px; /* Mismo ancho que la imagen en pantallas más pequeñas */
+        width: 200px;
+      }
+
+      .video-description {
+        font-size: 0.75em;
+        max-width: 200px;
+      }
+
+      .game-container {
+        width: 240px;
+        height: 160px;
       }
 
       .back-arrow {
@@ -256,19 +297,25 @@
 
     <div class="blog-post">
       <img src="catitoportada.png" alt="Next Project Game" class="blog-cover-image">
-      <h2 data-translate="title">Por ahora llevo 6 días (8 de Abril)</h2>
+      <h2 data-translate="title">Comienzo del proyecto 8 de Abril</h2>
       <p data-translate="description">Gané mucha práctica con el juego de los ganzos jugando futbol, por lo que me inspira y motiva a seguir desarrollando más videojuegos para WEB. Esta vez será uno mas complejo. De disparos, sigilo, recompensas, multiplayer o single.</p>
-      <br><span data-translate="soon">SOON</span><br>
-      <!-- Video insertado aquí -->
+      <br><span data-translate="soon">Puedes jugarlo aquí debajo</span><br>
+      <!-- Juego embebido -->
+      <div class="game-container">
+        <iframe src="game.html" class="game-iframe" title="Catito Game"></iframe>
+      </div>
+      <!-- Primer video -->
       <video class="blog-video" controls>
         <source src="catos.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
-      <br>
+      <p class="video-description" data-translate="video1_description">Primeras imágenes del juego mostrando mecánicas de sigilo e interacción con el entorno.</p>
+      <!-- Segundo video -->
       <video class="blog-video" controls>
         <source src="catos2.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
+      <p class="video-description" data-translate="video2_description">Demostración de las mecánicas de disparo y ajustes dinámicos de la cámara.</p>
     </div>
   </div>
 
@@ -277,15 +324,19 @@
     const translations = {
       en: {
         back: "Back",
-        title: "So far, I've been working for 6 days (April 8)",
+        title: "Project start April 8",
         description: "I gained a lot of practice with the soccer-playing geese game, which inspires and motivates me to keep developing more web-based video games. This time, it will be a more complex one. Shooting, stealth, rewards, multiplayer or single-player.",
-        soon: "SOON"
+        soon: "👇 You can play it below 👇",
+        video1_description: "Early gameplay showing stealth mechanics and environment interaction.",
+        video2_description: "Demo of shooting mechanics and dynamic camera adjustments."
       },
       es: {
         back: "Volver",
-        title: "Por ahora llevo 6 días (8 de Abril)",
+        title: "Comienzo del proyecto 8 de Abril",
         description: "Gané mucha práctica con el juego de los ganzos jugando futbol, por lo que me inspira y motiva a seguir desarrollando más videojuegos para WEB. Esta vez será uno mas complejo. De disparos, sigilo, recompensas, multiplayer o single.",
-        soon: "PRONTO"
+        soon: "👇 Puedes jugarlo aquí debajo 👇",
+        video1_description: "Primeras imágenes del juego mostrando mecánicas de sigilo e interacción con el entorno.",
+        video2_description: "Demostración de las mecánicas de disparo y ajustes dinámicos de la cámara."
       }
     };
 
@@ -299,19 +350,12 @@
 
     // Función para cambiar el idioma
     function toggleLanguage() {
-      // Cambiar idioma
       currentLang = currentLang === 'en' ? 'es' : 'en';
-
-      // Actualizar texto del botón
       langText.textContent = currentLang.toUpperCase();
-
-      // Actualizar textos traducibles
       translatableElements.forEach(element => {
         const key = element.getAttribute('data-translate');
         element.textContent = translations[currentLang][key];
       });
-
-      // Actualizar el atributo lang del HTML
       document.documentElement.lang = currentLang;
     }
 
