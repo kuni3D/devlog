@@ -13,7 +13,7 @@
     }
 
     html {
-      scroll-behavior: smooth; /* Desplazamiento suave */
+      scroll-behavior: smooth;
     }
 
     body {
@@ -29,8 +29,8 @@
     }
 
     #main {
-      background: rgba(18, 18, 18, 0.9); /* Fondo semi-transparente para que el SVG sea visible detrás */
-      max-width: 55rem; /* Reducimos el ancho para que más área del SVG sea visible */
+      background: rgba(18, 18, 18, 0.9);
+      max-width: 55rem;
       margin: 0 auto;
       padding: 2rem 4rem;
       border-radius: 1px;
@@ -44,25 +44,25 @@
 
     .profile-image {
       width: 300px;
-      height: 300px; /* Añadido para asegurar un contenedor cuadrado */
-      border-radius: 50%; /* Cambiado a 50% para consistencia */
+      height: 300px;
+      border-radius: 50%;
       border: 1px solid rgba(0,0,0,0.102);
       padding: 1.75rem;
-      object-fit: cover; /* Añadido para ajustar la imagen al círculo */
-      transition: transform 0.3s ease; /* Animación suave al pasar el mouse */
+      object-fit: cover;
+      transition: transform 0.3s ease;
     }
 
     .profile-image:hover {
-      transform: scale(1.05); /* Efecto de zoom sutil */
+      transform: scale(1.05);
     }
 
     .profile-text a {
-      text-decoration: none; /* Quita el subrayado */
+      text-decoration: none;
     }
 
     .profile-text a:hover h3 {
-      text-decoration: underline; /* Opcional: subrayado al pasar el mouse */
-      color: #8E8E8E; /* Opcional: cambia el color al pasar el mouse */
+      text-decoration: underline;
+      color: #8E8E8E;
     }
 
     .profile-text h3 {
@@ -84,10 +84,20 @@
       line-height: 1.5;
       font-weight: 400;
       margin-bottom: 1.75rem;
+      display: inline-block;
+    }
+
+    .profile-text .nickname {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.65625em;
+      color: #5A4C70;
+      font-weight: 400;
+      margin-left: 0.5rem;
+      vertical-align: baseline;
     }
 
     .profile-text p {
-      color: #A0A0A0; /* Mejor contraste que #8E8E8E */
+      color: #A0A0A0;
       font-family: 'Inter', sans-serif;
       font-size: 1em;
       line-height: 1.875;
@@ -115,7 +125,7 @@
 
     .artstation-button:hover {
       background-color: rgba(38,38,38,0.89);
-      transform: translateY(-2px); /* Efecto de elevación al pasar el mouse */
+      transform: translateY(-2px);
     }
 
     .artstation-button span {
@@ -123,13 +133,13 @@
     }
 
     .home-link {
-      position: fixed; /* Cambiado a fixed para que flote */
+      position: fixed;
       top: 1rem;
       left: 1rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      z-index: 1000; /* Por encima de otros elementos */
+      z-index: 1000;
     }
 
     .home-link svg {
@@ -155,17 +165,15 @@
       color: #8E8E8E;
     }
 
-    /* Contenedor del botón de idioma */
     .language-toggle {
-      position: fixed; /* Fijo para que flote */
+      position: fixed;
       top: 1rem;
       right: 1rem;
       display: flex;
       align-items: center;
-      z-index: 1000; /* Por encima de otros elementos */
+      z-index: 1000;
     }
 
-    /* Estilo del botón de idioma */
     .lang-btn {
       background: linear-gradient(145deg, #2A233A, #1C1726);
       border: 1px solid #5A4C70;
@@ -179,7 +187,6 @@
       transition: all 0.3s ease;
     }
 
-    /* Texto dentro del botón */
     .lang-btn .lang-text {
       color: #8E8E8E;
       font-family: 'Inter', sans-serif;
@@ -189,7 +196,6 @@
       transition: color 0.3s ease;
     }
 
-    /* Efecto hover */
     .lang-btn:hover {
       background: linear-gradient(145deg, #3A2F4A, #2A233A);
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.2);
@@ -200,26 +206,24 @@
       color: #fff;
     }
 
-    /* Efecto activo (click) */
     .lang-btn:active {
       transform: translateY(0);
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
     }
 
-    /* Estilos para las entradas de blog */
     .blog-entries {
       margin-top: 1.5rem;
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 12px;
       padding: 2rem;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      background: #121212; /* Fondo sólido para las entradas */
+      background: #121212;
       position: relative;
       transition: opacity 0.3s ease;
     }
 
     .blog-entries.fade {
-      opacity: 0; /* Estado inicial para la animación de fade */
+      opacity: 0;
     }
 
     .blog-entry {
@@ -234,8 +238,8 @@
     }
 
     .blog-entry:hover {
-      background-color: rgba(255, 255, 255, 0.05); /* Fondo sutil al pasar el mouse */
-      transform: translateY(-3px); /* Efecto de elevación */
+      background-color: rgba(255, 255, 255, 0.05);
+      transform: translateY(-3px);
     }
 
     .blog-entry:hover .blog-text h2 {
@@ -251,7 +255,7 @@
     }
 
     .blog-entry:hover .blog-image {
-      transform: scale(1.03); /* Zoom sutil en la imagen al pasar el mouse */
+      transform: scale(1.03);
     }
 
     .blog-text {
@@ -269,14 +273,13 @@
     }
 
     .blog-text p {
-      color: #A0A0A0; /* Mejor contraste */
+      color: #A0A0A0;
       font-family: 'Inter', sans-serif;
       font-size: 1em;
       line-height: 1.875;
       font-weight: 300;
     }
 
-    /* Estilo para el spinner de carga */
     .loading-spinner {
       position: absolute;
       top: 50%;
@@ -288,7 +291,7 @@
       border-top: 3px solid #5A4C70;
       border-radius: 50%;
       animation: spin 1s linear infinite;
-      display: none; /* Oculto por defecto */
+      display: none;
     }
 
     @keyframes spin {
@@ -296,7 +299,6 @@
       100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
-    /* Estilos para la paginación */
     .pagination {
       display: flex;
       justify-content: center;
@@ -357,7 +359,7 @@
 
       .profile-image {
         width: 12rem;
-        height: 12rem; /* Añadido para mantener proporción cuadrada */
+        height: 12rem;
       }
 
       .profile-text h3 {
@@ -368,6 +370,10 @@
       .profile-text h1 {
         letter-spacing: -0.021875rem;
         font-size: 2.625em;
+      }
+
+      .profile-text .nickname {
+        font-size: 0.65625em;
       }
 
       .profile-text p {
@@ -435,6 +441,10 @@
         font-size: 2em;
       }
 
+      .profile-text .nickname {
+        font-size: 0.5em;
+      }
+
       .blog-entries {
         padding: 1rem;
       }
@@ -500,7 +510,10 @@
         <a href="index.html">
           <h3 data-translate="devlog">KUNI'S DEVLOG</h3>
         </a>
-        <h1 data-translate="greeting">Hi, I'm Alan</h1>
+        <h1>
+          <span data-translate="greeting">Hi, I'm Alan</span>
+          <span class="nickname" data-translate="nickname">aka Kuni</span>
+        </h1>
         <p data-translate="bio">DevArtist / 3D Generalist<br/>Blender & Three.js.</p>
       </div>
     </div>
@@ -535,79 +548,147 @@
 
   <!-- JavaScript para la paginación dinámica y cambio de idioma -->
   <script>
-    // Script para la paginación dinámica
-    document.addEventListener('DOMContentLoaded', () => {
-      const blogEntriesContainer = document.getElementById('blog-entries');
-      const loadingSpinner = document.getElementById('loading-spinner');
-      const paginationLinks = document.querySelectorAll('.pagination a, .pagination-link');
-      const totalPages = 3;
-
-      function getPageFromURL() {
-        const params = new URLSearchParams(window.location.search);
-        const page = parseInt(params.get('page')) || 1;
-        return Math.max(1, Math.min(page, totalPages));
+    // Script para la paginación dinámica y cambio de idioma
+    const translations = {
+      en: {
+        home: "Home",
+        devlog: "KUNI'S DEVLOG",
+        greeting: "Hi, I'm Alan",
+        nickname: "aka Kuni",
+        bio: "DevArtist / 3D Generalist<br/>Blender & Three.js.",
+        portfolio: "Portfolio",
+        entry1_title: "NEXT PROJECT",
+        entry1_desc: "Developing a web-based video game as a SoloDev using Three.js...",
+        entry2_title: "GOOSE FOOTBALL GAME IN 6 DAYS",
+        entry2_desc: "How did I manage to write over a thousand lines of code to create a unique video game? By blending creativity, technical skills, and the power of artificial intelligence as my ally...",
+        entry3_title: "AI FOR 3D ANIMATION",
+        entry3_desc: "How do I create captivating 3D animations with the help of artificial intelligence? By combining artistic vision...",
+        entry4_title: "AI FOR 3D MODELS AND CONCEPTS",
+        entry4_desc: "How do I draw inspiration from AI-generated 3D models to craft my own unique creations? By tapping into the power of artificial intelligence...",
+        entry5_title: "PROCEDURAL TEXTURES",
+        entry5_desc: "I believe procedural techniques are the future—whether for textures or environments. By optimizing workflows, users can experience deeper immersion and feel like they’re in a truly unique world...",
+        entry6_title: "METAHUMANS",
+        entry6_desc: "My workflow for putting Metahumans into Blender..."
+      },
+      es: {
+        home: "Inicio",
+        devlog: "DEVLOG DE KUNI",
+        greeting: "Hola, soy Alan",
+        nickname: "aka Kuni",
+        bio: "DevArtist / Generalista 3D<br/>Blender & Three.js.",
+        portfolio: "Portafolio",
+        entry1_title: "PRÓXIMO PROYECTO",
+        entry1_desc: "Desarrollando como SoloDev un videojuego para web con Three.js...",
+        entry2_title: "JUEGO DE FÚTBOL DE GANSOS EN 6 DÍAS",
+        entry2_desc: "¿Cómo logré escribir más de mil líneas de código para crear un videojuego único? Combinando creatividad, habilidades técnicas y el poder de la inteligencia artificial como mi aliada...",
+        entry3_title: "IA PARA ANIMACIÓN 3D",
+        entry3_desc: "¿Cómo creo animaciones 3D cautivadoras con la ayuda de la inteligencia artificial? Combinando visión artística...",
+        entry4_title: "IA PARA MODELOS Y CONCEPTOS 3D",
+        entry4_desc: "¿Cómo me inspiro en modelos 3D generados por IA para crear mis propias creaciones únicas? Aprovechando el poder de la inteligencia artificial...",
+        entry5_title: "TEXTURAS PROCEDURALES",
+        entry5_desc: "Creo que las técnicas procedurales son el futuro, ya sea para texturas o entornos. Al optimizar flujos de trabajo, los usuarios pueden experimentar una inmersión más profunda y sentir que están en un mundo verdaderamente único...",
+        entry6_title: "METAHUMANS",
+        entry6_desc: "Mi workflow para colocar Metahumans en Blender..."
       }
+    };
 
-      function updateURL(page) {
-        const newURL = `${window.location.pathname}?page=${page}`;
-        history.pushState({ page: page }, '', newURL);
-      }
+    let currentLang = 'en';
+    const langBtn = document.getElementById('lang-btn');
+    const langText = langBtn.querySelector('.lang-text');
+    const blogEntriesContainer = document.getElementById('blog-entries');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const paginationLinks = document.querySelectorAll('.pagination a, .pagination-link');
+    const totalPages = 3;
 
-      function fetchEntries(page) {
-        const url = `entries-page${page}.html`;
-        loadingSpinner.style.display = 'block';
-        blogEntriesContainer.classList.add('fade');
+    function applyTranslations() {
+      const translatableElements = document.querySelectorAll('[data-translate]');
+      translatableElements.forEach(element => {
+        const key = element.getAttribute('data-translate');
+        if (translations[currentLang][key]) {
+          if (element.tagName === 'P') {
+            element.innerHTML = translations[currentLang][key];
+          } else {
+            element.textContent = translations[currentLang][key];
+          }
+        }
+      });
+      document.documentElement.lang = currentLang;
+    }
 
-        fetch(url)
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            return response.text();
-          })
-          .then(data => {
-            setTimeout(() => {
-              blogEntriesContainer.innerHTML = data;
-              blogEntriesContainer.classList.remove('fade');
-              loadingSpinner.style.display = 'none';
-            }, 300);
-          })
-          .catch(error => {
-            console.error('Error fetching entries:', error);
-            blogEntriesContainer.innerHTML = '<p>Error loading entries. Please try again later.</p>';
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'es' : 'en';
+      langText.textContent = currentLang.toUpperCase();
+      applyTranslations();
+    }
+
+    function getPageFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      const page = parseInt(params.get('page')) || 1;
+      return Math.max(1, Math.min(page, totalPages));
+    }
+
+    function updateURL(page) {
+      const newURL = `${window.location.pathname}?page=${page}`;
+      history.pushState({ page: page }, '', newURL);
+    }
+
+    function fetchEntries(page) {
+      const url = `entries-page${page}.html`;
+      loadingSpinner.style.display = 'block';
+      blogEntriesContainer.classList.add('fade');
+
+      fetch(url)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.text();
+        })
+        .then(data => {
+          setTimeout(() => {
+            blogEntriesContainer.innerHTML = data;
+            applyTranslations();
             blogEntriesContainer.classList.remove('fade');
             loadingSpinner.style.display = 'none';
-          });
-      }
-
-      function updatePagination(page) {
-        paginationLinks.forEach(link => {
-          link.classList.remove('active');
-          if (parseInt(link.getAttribute('data-page')) === page) {
-            link.classList.add('active');
-          }
+          }, 300);
+        })
+        .catch(error => {
+          console.error('Error fetching entries:', error);
+          blogEntriesContainer.innerHTML = '<p>Error loading entries. Please try again later.</p>';
+          blogEntriesContainer.classList.remove('fade');
+          loadingSpinner.style.display = 'none';
         });
+    }
 
-        const prevArrow = document.querySelector('.prev-arrow');
-        const nextArrow = document.querySelector('.next-arrow');
-        const prevPage = page - 1;
-        const nextPage = page + 1;
-
-        if (prevPage >= 1) {
-          prevArrow.setAttribute('data-page', prevPage);
-          prevArrow.style.display = 'flex';
-        } else {
-          prevArrow.style.display = 'none';
+    function updatePagination(page) {
+      paginationLinks.forEach(link => {
+        link.classList.remove('active');
+        if (parseInt(link.getAttribute('data-page')) === page) {
+          link.classList.add('active');
         }
+      });
 
-        if (nextPage <= totalPages) {
-          nextArrow.setAttribute('data-page', nextPage);
-          nextArrow.style.display = 'flex';
-        } else {
-          nextArrow.style.display = 'none';
-        }
+      const prevArrow = document.querySelector('.prev-arrow');
+      const nextArrow = document.querySelector('.next-arrow');
+      const prevPage = page - 1;
+      const nextPage = page + 1;
+
+      if (prevPage >= 1) {
+        prevArrow.setAttribute('data-page', prevPage);
+        prevArrow.style.display = 'flex';
+      } else {
+        prevArrow.style.display = 'none';
       }
 
+      if (nextPage <= totalPages) {
+        nextArrow.setAttribute('data-page', nextPage);
+        nextArrow.style.display = 'flex';
+      } else {
+        nextArrow.style.display = 'none';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
       const initialPage = getPageFromURL();
       fetchEntries(initialPage);
       updatePagination(initialPage);
@@ -628,47 +709,10 @@
         fetchEntries(page);
         updatePagination(page);
       });
+
+      langBtn.addEventListener('click', toggleLanguage);
+      toggleLanguage();
     });
-
-    // Script para el cambio de idioma
-    const translations = {
-      en: {
-        home: "Home",
-        devlog: "KUNI'S DEVLOG",
-        greeting: "Hi, I'm Alan",
-        bio: "DevArtist / 3D Generalist<br/>Blender & Three.js.",
-        portfolio: "Portfolio"
-      },
-      es: {
-        home: "Inicio",
-        devlog: "DEVLOG DE KUNI",
-        greeting: "Hola, soy Alan",
-        bio: "DevArtist / Generalista 3D<br/>Blender & Three.js.",
-        portfolio: "Portafolio"
-      }
-    };
-
-    let currentLang = 'en';
-    const langBtn = document.getElementById('lang-btn');
-    const langText = langBtn.querySelector('.lang-text');
-    const translatableElements = document.querySelectorAll('[data-translate]');
-
-    function toggleLanguage() {
-      currentLang = currentLang === 'en' ? 'es' : 'en';
-      langText.textContent = currentLang.toUpperCase();
-      translatableElements.forEach(element => {
-        const key = element.getAttribute('data-translate');
-        if (element.tagName === 'P') {
-          element.innerHTML = translations[currentLang][key];
-        } else {
-          element.textContent = translations[currentLang][key];
-        }
-      });
-      document.documentElement.lang = currentLang;
-    }
-
-    langBtn.addEventListener('click', toggleLanguage);
-    toggleLanguage();
   </script>
 </body>
 </html>
