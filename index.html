@@ -17,37 +17,40 @@
     }
 
     body {
-      background:
-        url('pattern.svg'),
-        linear-gradient(180deg, #261F33 0%, #000000 100%);
+      position: relative;
+      background: url('pattern.svg'), linear-gradient(180deg, #261F33 0%, #000000 100%);
       background-size: 512px, auto;
       background-position: center, center;
       background-repeat: repeat, no-repeat;
       min-height: 100vh;
       font-family: 'Inter', sans-serif;
       color: #fff;
+      overflow: visible;
     }
 
     #main {
       background: rgba(18, 18, 18, 0.9);
-      max-width: 55rem;
+      max-width: 71.5rem;
+      width: 100%;
       margin: 0 auto;
       padding: 2rem 4rem;
       border-radius: 1px;
+      position: relative;
+      overflow: visible;
     }
 
     .profile-container {
       display: flex;
-      align-items: center;
-      gap: 4rem;
+      align-items: flex-start;
+      gap: 3rem;
     }
 
     .profile-image {
-      width: 300px;
-      height: 300px;
+      width: 225px;
+      height: 225px;
       border-radius: 50%;
       border: 1px solid rgba(0,0,0,0.102);
-      padding: 1.75rem;
+      padding: 1.3125rem;
       object-fit: cover;
       transition: transform 0.3s ease;
     }
@@ -69,38 +72,38 @@
       text-transform: uppercase;
       color: #5E5E5E;
       font-family: 'Inter', sans-serif;
-      letter-spacing: 0.4rem;
-      font-size: 0.75em;
+      letter-spacing: 0.3rem;
+      font-size: 0.5625em;
       line-height: 2.25;
       font-weight: 300;
-      margin-bottom: 1.75rem;
+      margin-bottom: 1.3125rem;
     }
 
     .profile-text h1 {
       color: #5A4C70;
       font-family: 'Manrope', sans-serif;
-      letter-spacing: -0.025rem;
-      font-size: 2.625em;
+      letter-spacing: -0.01875rem;
+      font-size: 1.96875em;
       line-height: 1.5;
       font-weight: 400;
-      margin-bottom: 1.75rem;
+      margin-bottom: 1.3125rem;
       display: inline-block;
     }
 
     .profile-text .nickname {
       font-family: 'Manrope', sans-serif;
-      font-size: 0.45em;
+      font-size: 0.3375em;
       color: #5A4C70;
       font-weight: 400;
-      margin-left: 0.5rem;
+      margin-left: 0.375rem;
       vertical-align: baseline;
     }
 
     .profile-text p {
       color: #A0A0A0;
       font-family: 'Inter', sans-serif;
-      font-size: 1em;
-      line-height: 1.875;
+      font-size: 0.75em;
+      line-height: 1.40625;
       font-weight: 300;
     }
 
@@ -220,6 +223,14 @@
       background: #121212;
       position: relative;
       transition: opacity 0.3s ease;
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      visibility: visible;
+      opacity: 1;
+      min-height: 200px;
+      overflow: visible;
     }
 
     .blog-entries.fade {
@@ -229,11 +240,11 @@
     .blog-entry {
       display: flex;
       align-items: center;
-      gap: 2rem;
-      margin-bottom: 3rem;
+      gap: 1.5rem;
+      margin-bottom: 0;
       text-decoration: none;
-      padding: 1rem;
-      border-radius: 8px;
+      padding: 0.75rem;
+      border-radius: 6px;
       transition: background-color 0.3s ease, transform 0.3s ease;
     }
 
@@ -247,10 +258,10 @@
     }
 
     .blog-image {
-      width: 200px;
-      height: 200px;
+      width: 150px;
+      height: 150px;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: 6px;
       transition: transform 0.3s ease;
     }
 
@@ -266,17 +277,17 @@
       color: #5A4C70;
       font-family: 'Inter', sans-serif;
       font-weight: 300;
-      font-size: 0.7em;
+      font-size: 0.525em;
       line-height: 1.25;
-      letter-spacing: 0.5em;
-      margin-bottom: 1rem;
+      letter-spacing: 0.375em;
+      margin-bottom: 0.75rem;
     }
 
     .blog-text p {
       color: #A0A0A0;
       font-family: 'Inter', sans-serif;
-      font-size: 1em;
-      line-height: 1.875;
+      font-size: 0.75em;
+      line-height: 1.40625;
       font-weight: 300;
     }
 
@@ -351,6 +362,60 @@
       fill: #8E8E8E;
     }
 
+    .preview-image {
+      width: 16.66%;
+      height: 200px;
+      object-fit: cover;
+      position: absolute;
+      clip-path: polygon(0 0, 30% 0, 100% 100%, 70% 100%);
+      transition: transform 0.3s ease;
+    }
+
+    .preview-image:first-child {
+      object-position: 75% 0%;
+      transform: scale(1);
+    }
+
+    .preview-image:hover {
+      transform: scale(1.05);
+    }
+
+    .preview-image:nth-child(1) { left: 55%; z-index: 6; }
+    .preview-image:nth-child(2) { left: 59%; z-index: 5; }
+    .preview-image:nth-child(3) { left: 63%; z-index: 4; }
+    .preview-image:nth-child(4) { left: 67%; z-index: 3; }
+    .preview-image:nth-child(5) { left: 71%; z-index: 2; }
+    .preview-image:nth-child(6) { left: 75%; z-index: 1; }
+
+    .preview-image:hover {
+      transform: scale(1.05);
+      z-index: 10;
+    }
+
+    .particle {
+      position: absolute;
+      font-size: 1.2em;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 10001;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .particle.x { color: #6e6e6e; }
+    .particle.triangle { color: #6e6e6e; }
+    .particle.square { color: #6e6e6e; }
+    .particle.circle { color: #6e6e6e; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.5); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0; transform: scale(0.5); }
+    }
+
     @media (max-width: 736px) {
       .profile-container {
         flex-direction: column;
@@ -358,26 +423,26 @@
       }
 
       .profile-image {
-        width: 12rem;
-        height: 12rem;
+        width: 9rem;
+        height: 9rem;
       }
 
       .profile-text h3 {
-        letter-spacing: 0.35rem;
-        font-size: 0.75em;
+        letter-spacing: 0.2625rem;
+        font-size: 0.5625em;
       }
 
       .profile-text h1 {
-        letter-spacing: -0.021875rem;
-        font-size: 2.625em;
+        letter-spacing: -0.01640625rem;
+        font-size: 1.96875em;
       }
 
       .profile-text .nickname {
-        font-size: 0.65625em;
+        font-size: 0.4921875em;
       }
 
       .profile-text p {
-        font-size: 1em;
+        font-size: 0.75em;
       }
 
       .artstation-button {
@@ -386,6 +451,8 @@
 
       .blog-entries {
         padding: 1.5rem;
+        width: 100%;
+        grid-template-columns: 1fr;
       }
 
       .blog-entry {
@@ -395,7 +462,7 @@
 
       .blog-image {
         width: 100%;
-        max-width: 300px;
+        max-width: 225px;
         height: auto;
       }
 
@@ -430,19 +497,32 @@
       .lang-btn .lang-text {
         font-size: 0.8em;
       }
+
+      #main {
+        width: 100%;
+        max-width: none;
+        margin: 0 auto;
+      }
+
+      .preview-image {
+        display: none;
+      }
     }
 
     @media (max-width: 360px) {
       #main {
         padding: 3rem 1.5rem;
+        width: 100%;
+        max-width: none;
+        margin: 0 auto;
       }
 
       .profile-text h1 {
-        font-size: 2em;
+        font-size: 1.5em;
       }
 
       .profile-text .nickname {
-        font-size: 0.5em;
+        font-size: 0.375em;
       }
 
       .blog-entries {
@@ -450,7 +530,7 @@
       }
 
       .blog-text h2 {
-        font-size: 1.25em;
+        font-size: 0.9375em;
       }
 
       .pagination a {
@@ -489,14 +569,12 @@
 </head>
 <body>
   <div id="main">
-    <!-- Botón de cambio de idioma -->
     <div class="language-toggle">
       <button id="lang-btn" class="lang-btn">
         <span class="lang-text">EN</span>
       </button>
     </div>
 
-    <!-- Enlace Home flotante -->
     <div class="home-link">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
@@ -508,25 +586,31 @@
       <img src="A4.png" alt="Perfil" class="profile-image">
       <div class="profile-text">
         <a href="index.html">
-          <h3 data-translate="devlog">KUNI'S DEVLOG</h3>
+          <h3 data-translate="devlog">WELCOME</h3>
         </a>
         <h1>
           <span data-translate="greeting">Hi, I'm Alan</span>
           <span class="nickname" data-translate="nickname">aka Kuni</span>
         </h1>
-        <p data-translate="bio">DevArtist / 3D Generalist<br/>Blender & Three.js.</p>
+        <p data-translate="bio">DevArtist / 3D Generalist<br/>Character Designer<br/>Blender, Adobe, Html/CSS/Js.</p>
+      </div>
+      <div>
+        <img src="mechito011.png" alt="Preview 1" class="preview-image">
+        <img src="pollito.png" alt="Preview 2" class="preview-image">
+        <img src="bcattpose.png" alt="Preview 3" class="preview-image">
+        <img src="bot1.png" alt="Preview 4" class="preview-image">
+        <img src="razevert.png" alt="Preview 5" class="preview-image">
+        <img src="render8.png" alt="Preview 6" class="preview-image">
       </div>
     </div>
     <a href="http://kuni3d.carrd.co" class="artstation-button">
       <span data-translate="portfolio">Portfolio</span>
     </a>
 
-    <!-- Sección de entradas de blog -->
     <div class="blog-entries" id="blog-entries">
       <div class="loading-spinner" id="loading-spinner"></div>
     </div>
 
-    <!-- Paginación -->
     <div class="pagination" id="pagination">
       <a data-page="0" class="prev-arrow" style="display: none;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -546,16 +630,14 @@
     </div>
   </div>
 
-  <!-- JavaScript para la paginación dinámica y cambio de idioma -->
   <script>
-    // Script para la paginación dinámica y cambio de idioma
     const translations = {
       en: {
         home: "Home",
-        devlog: "KUNI'S DEVLOG",
+        devlog: "WELCOME",
         greeting: "Hi, I'm Alan",
         nickname: "aka Kuni",
-        bio: "DevArtist / 3D Generalist<br/>Blender & Three.js.",
+        bio: "DevArtist / 3D Generalist<br/>Character Designer<br/>Blender, Adobe, Html/CSS/Js.",
         portfolio: "Portfolio",
         entry1_title: "NEXT PROJECT",
         entry1_desc: "Developing a web-based video game as a SoloDev using Three.js...",
@@ -572,10 +654,10 @@
       },
       es: {
         home: "Inicio",
-        devlog: "DEVLOG DE KUNI",
+        devlog: "BIENVENIDOS",
         greeting: "Hola, soy Alan",
         nickname: "aka Kuni",
-        bio: "DevArtist / Generalista 3D<br/>Blender & Three.js.",
+        bio: "DevArtist / Generalista 3D<br/>Diseño Personajes<br/>Blender, Adobe, Html/CSS/Js.",
         portfolio: "Portafolio",
         entry1_title: "PRÓXIMO PROYECTO",
         entry1_desc: "Desarrollando como SoloDev un videojuego para web con Three.js...",
@@ -598,7 +680,9 @@
     const blogEntriesContainer = document.getElementById('blog-entries');
     const loadingSpinner = document.getElementById('loading-spinner');
     const paginationLinks = document.querySelectorAll('.pagination a, .pagination-link');
-    const totalPages = 3;
+    const entriesPerPage = 6;
+    const totalEntries = Object.keys(translations.en).filter(key => key.startsWith('entry')).length / 2;
+    const totalPages = Math.ceil(totalEntries / entriesPerPage);
 
     function applyTranslations() {
       const translatableElements = document.querySelectorAll('[data-translate]');
@@ -619,6 +703,8 @@
       currentLang = currentLang === 'en' ? 'es' : 'en';
       langText.textContent = currentLang.toUpperCase();
       applyTranslations();
+      const currentPage = getPageFromURL();
+      renderEntries(currentPage);
     }
 
     function getPageFromURL() {
@@ -632,38 +718,49 @@
       history.pushState({ page: page }, '', newURL);
     }
 
-    function fetchEntries(page) {
-      const url = `entries-page${page}.html`;
+    function renderEntries(page) {
+      console.log(`Rendering page ${page}`);
       loadingSpinner.style.display = 'block';
       blogEntriesContainer.classList.add('fade');
 
-      fetch(url)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.text();
-        })
-        .then(data => {
-          setTimeout(() => {
-            blogEntriesContainer.innerHTML = data;
-            applyTranslations();
-            blogEntriesContainer.classList.remove('fade');
-            loadingSpinner.style.display = 'none';
-          }, 300);
-        })
-        .catch(error => {
-          console.error('Error fetching entries:', error);
-          blogEntriesContainer.innerHTML = '<p>Error loading entries. Please try again later.</p>';
-          blogEntriesContainer.classList.remove('fade');
-          loadingSpinner.style.display = 'none';
-        });
+      const start = (page - 1) * entriesPerPage + 1;
+      const end = Math.min(start + entriesPerPage - 1, totalEntries);
+      let html = '';
+
+      for (let i = start; i <= end; i++) {
+        const titleKey = `entry${i}_title`;
+        const descKey = `entry${i}_desc`;
+        if (translations[currentLang][titleKey] && translations[currentLang][descKey]) {
+          html += `
+            <a href="${i === 1 ? 'https://kuni3d.github.io/devlog/catoBlog.html' : i === 2 ? 'https://kuni3d.github.io/devlog/ganzosBlog.html' : i === 3 ? 'https://kuni3d.github.io/devlog/claireBlog.html' : i === 4 ? 'https://kuni3d.github.io/devlog/botBlog.html' : i === 5 ? 'https://kuni3d.github.io/devlog/proceduraltextBlog.html' : '#.html'}" class="blog-entry">
+              <img src="${i === 1 ? 'environment1.png' : i === 2 ? 'ganzos1.png' : i === 3 ? 'claire1.png' : i === 4 ? 'bot1.png' : i === 5 ? 'landscape 2.png' : 'render8.png'}" alt="Blog entry ${i}" class="blog-image" onerror="this.src='https://via.placeholder.com/150?text=Entry+${i}'">
+              <div class="blog-text">
+                <h2 data-translate="${titleKey}">${translations[currentLang][titleKey]}</h2>
+                <p data-translate="${descKey}">${translations[currentLang][descKey]}</p>
+              </div>
+            </a>
+          `;
+        }
+      }
+
+      if (!html) {
+        html = '<p>No hay entradas disponibles para esta página.</p>';
+      }
+
+      setTimeout(() => {
+        blogEntriesContainer.innerHTML = html;
+        applyTranslations();
+        blogEntriesContainer.classList.remove('fade');
+        loadingSpinner.style.display = 'none';
+      }, 300);
     }
 
     function updatePagination(page) {
+      console.log(`Updating pagination for page ${page}`);
       paginationLinks.forEach(link => {
         link.classList.remove('active');
-        if (parseInt(link.getAttribute('data-page')) === page) {
+        const linkPage = parseInt(link.getAttribute('data-page'));
+        if (linkPage === page) {
           link.classList.add('active');
         }
       });
@@ -686,32 +783,101 @@
       } else {
         nextArrow.style.display = 'none';
       }
-    }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const initialPage = getPageFromURL();
-      fetchEntries(initialPage);
-      updatePagination(initialPage);
+      const paginationContainer = document.getElementById('pagination');
+      let paginationHTML = `
+        <a data-page="${prevPage}" class="prev-arrow" style="display: ${prevPage >= 1 ? 'flex' : 'none'};">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
+          </svg>
+          <span>Previous</span>
+        </a>
+      `;
+      for (let i = 1; i <= totalPages; i++) {
+        paginationHTML += `<a data-page="${i}" class="${i === page ? 'active' : ''}">${i}</a>`;
+      }
+      paginationHTML += `
+        <a data-page="${nextPage}" class="next-arrow" style="display: ${nextPage <= totalPages ? 'flex' : 'none'};">
+          <span>Next</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
+          </svg>
+        </a>
+      `;
+      paginationContainer.innerHTML = paginationHTML;
 
-      paginationLinks.forEach(link => {
+      document.querySelectorAll('.pagination a').forEach(link => {
         link.addEventListener('click', (e) => {
           e.preventDefault();
           const page = parseInt(link.getAttribute('data-page'));
           if (page === 0) return;
-          fetchEntries(page);
+          renderEntries(page);
           updatePagination(page);
           updateURL(page);
         });
       });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM loaded, initializing...');
+      const initialPage = getPageFromURL();
+      renderEntries(initialPage);
+      updatePagination(initialPage);
 
       window.addEventListener('popstate', (e) => {
         const page = e.state ? e.state.page : getPageFromURL();
-        fetchEntries(page);
+        renderEntries(page);
         updatePagination(page);
       });
 
       langBtn.addEventListener('click', toggleLanguage);
       toggleLanguage();
+
+      const particles = [];
+      document.addEventListener('mousemove', (e) => {
+        console.log('Mouse moved at:', e.pageX, e.pageY);
+        const types = ['x', 'triangle', 'square', 'circle'];
+        const type = types[Math.floor(Math.random() * types.length)];
+        const particle = document.createElement('div');
+        particle.className = `particle ${type}`;
+        particle.innerHTML = type === 'x' ? '✖' : type === 'triangle' ? '△' : type === 'square' ? '□' : 'o';
+        const offsetX = (Math.random() - 0.5) * 30;
+        const offsetY = (Math.random() - 0.5) * 30;
+        particle.style.left = `${e.pageX - 20 + offsetX}px`;
+        particle.style.top = `${e.pageY - 20 + offsetY}px`;
+        particle.style.position = 'absolute';
+        particle.style.zIndex = '10001';
+        document.body.appendChild(particle);
+
+        // Animación de entrada
+        requestAnimationFrame(() => {
+          particle.style.animation = 'fadeIn 0.5s forwards';
+        });
+
+        // Simular gravedad
+        let gravity = -0.1;
+        const fallSpeed = 0.01;
+        function fall() {
+          if (particle && particle.style.opacity !== '0') {
+            gravity += fallSpeed;
+            const currentTop = parseFloat(particle.style.top) || e.pageY;
+            particle.style.top = `${currentTop + gravity}px`;
+            requestAnimationFrame(fall);
+          }
+        }
+        requestAnimationFrame(fall);
+
+        // Animación de salida y eliminación
+        setTimeout(() => {
+          particle.style.animation = 'fadeOut 1s forwards';
+          setTimeout(() => particle.remove(), 300);
+        }, 700);
+
+        particles.push(particle);
+        if (particles.length > 60) {
+          particles.shift().remove();
+        }
+      });
     });
   </script>
 </body>
