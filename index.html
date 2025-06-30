@@ -31,10 +31,10 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
       overflow: visible;
-      user-select: none; /* Prevent text selection */
-      -webkit-user-select: none; /* For Safari */
-      -moz-user-select: none; /* For Firefox */
-      -ms-user-select: none; /* For IE/Edge */
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
     }
 
     body::-webkit-scrollbar {
@@ -470,6 +470,11 @@
     @media (max-width: 736px) {
       .profile-container {
         flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .profile-text {
         text-align: center;
       }
 
@@ -689,7 +694,7 @@
         devlog: "WELCOME",
         greeting: "Hi, I'm Alan",
         nickname: "aka Kuni",
-        bio: "DevArtist / 3D Generalist<br/>Character Designer | Props | Environments<br/>Blender, Adobe, Html/CSS/Js.",
+        bio: "DevArtist / 3D Generalist - Modeler & Animator<br/>Character Designer | Props | Environments<br/>Blender, Adobe, Html/Css/Js.",
         portfolio: "Portfolio",
         entry1_title: "NEXT PROJECT",
         entry1_desc: "Developing a web-based video game as a SoloDev using Three.js...",
@@ -709,7 +714,7 @@
         devlog: "BIENVENIDOS",
         greeting: "Hola, soy Alan",
         nickname: "aka Kuni",
-        bio: "DevArtist / Generalista 3D<br/>Diseño Personajes | Props | Environments<br/>Blender, Adobe, Html/CSS/Js.",
+        bio: "DevArtist / Generalista 3D - Modelador & Animador<br/>Diseño Personajes | Props | Environments<br/>Blender, Adobe, Html/Css/Js.",
         portfolio: "Portafolio",
         entry1_title: "PRÓXIMO PROYECTO",
         entry1_desc: "Desarrollando como SoloDev un videojuego para web con Three.js...",
@@ -785,7 +790,7 @@
         if (translations[currentLang][titleKey] && translations[currentLang][descKey]) {
           html += `
             <a href="${i === 1 ? 'https://kuni3d.github.io/devlog/catoBlog.html' : i === 2 ? 'https://kuni3d.github.io/devlog/ganzosBlog.html' : i === 3 ? 'https://kuni3d.github.io/devlog/claireBlog.html' : i === 4 ? 'https://kuni3d.github.io/devlog/botBlog.html' : i === 5 ? 'https://kuni3d.github.io/devlog/proceduraltextBlog.html' : '#.html'}" class="blog-entry">
-              <img src="${i === 1 ? 'environment1.png' : i === 2 ? 'ganzos1.png' : i === 3 ? 'claire1.png' : i === 4 ? 'bot1.png' : i === 5 ? 'landscape 2.png' : 'render8.png'}" alt="Blog entry ${i}" class="blog-image" onerror="this.src='https://via.placeholder.com/150?text=Entry+${i}'">
+              <img src="${i === 1 ? 'environment1.webp' : i === 2 ? 'ganzos1.png' : i === 3 ? 'claire1.png' : i === 4 ? 'bot1.png' : i === 5 ? 'landscape 2.png' : 'render8.png'}" alt="Blog entry ${i}" class="blog-image" onerror="this.src='https://via.placeholder.com/150?text=Entry+${i}'">
               <div class="blog-text">
                 <h2 data-translate="${titleKey}">${translations[currentLang][titleKey]}</h2>
                 <p data-translate="${descKey}">${translations[currentLang][descKey]}</p>
