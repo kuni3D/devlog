@@ -14,8 +14,7 @@
 
     html {
       scroll-behavior: smooth;
-      height-y: 100%; /* Asegura que el html ocupe toda la altura */
-      overflow-y: auto; /* Habilita scrollbar en html */
+      overflow-y: auto;
       overflow-x: hidden;
     }
 
@@ -28,14 +27,18 @@
       min-height: 100vh;
       background-color: #1a1a1a;
       color: #fff;
-      height: 100%; /* Asegura que el body ocupe toda la altura */
-      -ms-overflow-style: none; /* Oculta scrollbar nativa en IE/Edge */
-      scrollbar-width: none; /* Oculta scrollbar nativa en Firefox */
+      height: 100%;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
       overflow: visible;
+      user-select: none; /* Prevent text selection */
+      -webkit-user-select: none; /* For Safari */
+      -moz-user-select: none; /* For Firefox */
+      -ms-user-select: none; /* For IE/Edge */
     }
 
     body::-webkit-scrollbar {
-      display: none; /* Oculta scrollbar en WebKit (Chrome, Safari) */
+      display: none;
     }
 
     #main {
@@ -46,12 +49,12 @@
       padding: 2rem 4rem;
       border-radius: 1px;
       position: relative;
-      overflow-y: auto; /* Asegura scrollbar en #main */
-      z-index: 1; /* Asegura que esté por encima de otros elementos */
+      overflow-y: auto;
+      z-index: 1;
     }
 
     html::-webkit-scrollbar {
-      width: 8px; /* Ancho de la barra personalizada */
+      width: 8px;
       background: transparent;
     }
 
@@ -60,15 +63,13 @@
     }
 
     html::-webkit-scrollbar-thumb {
-      background-color: rgba(138, 43, 226, 0.5); /* Violeta con 50% opacidad */
-      border-radius: 4px; /* Barra redondeada */
+      background-color: rgba(138, 43, 226, 0.5);
+      border-radius: 4px;
     }
 
     html::-webkit-scrollbar-thumb:hover {
-      background-color: rgba(138, 43, 226, 0.7); /* Opacidad mayor al hover */
+      background-color: rgba(138, 43, 226, 0.7);
     }
-
-
 
     .blog-entries {
       margin-top: 1.5rem;
@@ -86,7 +87,7 @@
       visibility: visible;
       opacity: 1;
       min-height: 200px;
-      overflow-y: auto; /* Asegura scrollbar en .blog-entries */
+      overflow-y: auto;
       z-index: 1;
     }
 
@@ -659,7 +660,6 @@
 
     <div class="blog-entries" id="blog-entries">
       <div class="loading-spinner" id="loading-spinner"></div>
-      <!-- Añadimos contenido de prueba para forzar la scrollbar -->
       <div style="height: 800px;"></div>
     </div>
 
@@ -901,12 +901,10 @@
         particle.style.zIndex = '10001';
         document.body.appendChild(particle);
 
-        // Animación de entrada
         requestAnimationFrame(() => {
           particle.style.animation = 'fadeIn 0.5s forwards';
         });
 
-        // Simular gravedad
         let gravity = -0.1;
         const fallSpeed = 0.01;
         function fall() {
@@ -919,7 +917,6 @@
         }
         requestAnimationFrame(fall);
 
-        // Animación de salida y eliminación
         setTimeout(() => {
           particle.style.animation = 'fadeOut 1s forwards';
           setTimeout(() => particle.remove(), 300);
