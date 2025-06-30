@@ -635,20 +635,20 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
       </svg>
-      <a href="#" class="pagination-link" data-page="1" data-translate="home">Home</a>
+      <a href="?page=1" class="pagination-link" data-page="1" data-translate="home">Home</a>
     </div>
 
     <div class="profile-container">
       <img src="A4.png" alt="Perfil" class="profile-image">
       <div class="profile-text">
-        <a href="index.html">
+        <a href="?page=1">
           <h3 data-translate="devlog">WELCOME</h3>
         </a>
         <h1>
           <span data-translate="greeting">Hi, I'm Alan</span>
           <span class="nickname" data-translate="nickname">aka Kuni</span>
         </h1>
-        <p data-translate="bio">DevArtist / 3D Generalist<br/>Character Designer<br/>Blender, Adobe, Html/CSS/Js.</p>
+        <p data-translate="bio">DevArtist / 3D Generalist - Modeler & Animator<br/>Character Designer | Props | Environments<br/>Blender, Adobe, Html/Css/Js.</p>
       </div>
       <div>
         <img src="mechito011.png" alt="Preview 1" class="preview-image">
@@ -665,7 +665,6 @@
 
     <div class="blog-entries" id="blog-entries">
       <div class="loading-spinner" id="loading-spinner"></div>
-      <div style="height: 800px;"></div>
     </div>
 
     <div class="pagination" id="pagination">
@@ -707,7 +706,31 @@
         entry5_title: "PROCEDURAL TEXTURES",
         entry5_desc: "I believe procedural techniques are the future—whether for textures or environments. The users can experience deeper immersion and feel like they’re in a truly unique world...",
         entry6_title: "METAHUMANS",
-        entry6_desc: "My workflow for putting Metahumans into Blender..."
+        entry6_desc: "My workflow for putting Metahumans into Blender...",
+        entry7_title: "VR ENVIRONMENT DESIGN",
+        entry7_desc: "Exploring the creation of immersive VR environments using Unity and Blender...",
+        entry8_title: "CHARACTER RIGGING TECHNIQUES",
+        entry8_desc: "A deep dive into advanced rigging techniques for expressive character animations...",
+        entry9_title: "REAL-TIME RENDERING",
+        entry9_desc: "Optimizing real-time rendering pipelines for high-performance visuals in games...",
+        entry10_title: "AI-GENERATED TEXTURES",
+        entry10_desc: "Using AI tools to generate high-quality textures for 3D models...",
+        entry11_title: "DYNAMIC LIGHTING IN GAMES",
+        entry11_desc: "Implementing dynamic lighting systems to enhance game atmosphere...",
+        entry12_title: "SCULPTING IN BLENDER",
+        entry12_desc: "My process for creating detailed 3D sculptures in Blender...",
+        entry13_title: "MOTION CAPTURE INTEGRATION",
+        entry13_desc: "Integrating motion capture data into 3D animations for realistic movements...",
+        entry14_title: "ENVIRONMENTAL STORYTELLING",
+        entry14_desc: "Crafting immersive game worlds through environmental storytelling techniques...",
+        entry15_title: "PARTICLE EFFECTS IN GAMES",
+        entry15_desc: "Creating stunning particle effects to enhance visual appeal in games...",
+        entry16_title: "SHADER PROGRAMMING",
+        entry16_desc: "Writing custom shaders to achieve unique visual effects in real-time rendering...",
+        entry17_title: "AI-DRIVEN NPC BEHAVIOR",
+        entry17_desc: "Implementing AI-driven behaviors for non-player characters in games...",
+        entry18_title: "BLENDER ADD-ON DEVELOPMENT",
+        entry18_desc: "Developing custom add-ons to streamline workflows in Blender..."
       },
       es: {
         home: "Inicio",
@@ -727,7 +750,31 @@
         entry5_title: "TEXTURAS PROCEDURALES",
         entry5_desc: "Creo que las técnicas procedurales son el futuro, ya sea para texturas o entornos. Los usuarios podrían experimentar una inmersión más profunda y sentir que están en un mundo verdaderamente único...",
         entry6_title: "METAHUMANS",
-        entry6_desc: "Mi workflow para colocar Metahumans en Blender..."
+        entry6_desc: "Mi workflow para colocar Metahumans en Blender...",
+        entry7_title: "DISEÑO DE ENTORNOS VR",
+        entry7_desc: "Explorando la creación de entornos inmersivos para VR usando Unity y Blender...",
+        entry8_title: "TÉCNICAS DE RIGGING DE PERSONAJES",
+        entry8_desc: "Un análisis profundo de técnicas avanzadas de rigging para animaciones expresivas de personajes...",
+        entry9_title: "RENDERIZADO EN TIEMPO REAL",
+        entry9_desc: "Optimizando pipelines de renderizado en tiempo real para visuales de alto rendimiento en juegos...",
+        entry10_title: "TEXTURAS GENERADAS POR IA",
+        entry10_desc: "Usando herramientas de IA para generar texturas de alta calidad para modelos 3D...",
+        entry11_title: "ILUMINACIÓN DINÁMICA EN JUEGOS",
+        entry11_desc: "Implementando sistemas de iluminación dinámica para mejorar la atmósfera de los juegos...",
+        entry12_title: "ESCULTURA EN BLENDER",
+        entry12_desc: "Mi proceso para crear esculturas 3D detalladas en Blender...",
+        entry13_title: "INTEGRACIÓN DE CAPTURA DE MOVIMIENTO",
+        entry13_desc: "Integrando datos de captura de movimiento en animaciones 3D para movimientos realistas...",
+        entry14_title: "NARRATIVA AMBIENTAL",
+        entry14_desc: "Creando mundos de juego inmersivos mediante técnicas de narrativa ambiental...",
+        entry15_title: "EFECTOS DE PARTÍCULAS EN JUEGOS",
+        entry15_desc: "Creando efectos de partículas impresionantes para mejorar el atractivo visual en juegos...",
+        entry16_title: "PROGRAMACIÓN DE SHADERS",
+        entry16_desc: "Escribiendo shaders personalizados para lograr efectos visuales únicos en renderizado en tiempo real...",
+        entry17_title: "COMPORTAMIENTO DE NPCS IMPULSADO POR IA",
+        entry17_desc: "Implementando comportamientos de personajes no jugadores impulsados por IA en juegos...",
+        entry18_title: "DESARROLLO DE ADD-ONS PARA BLENDER",
+        entry18_desc: "Desarrollando add-ons personalizados para optimizar flujos de trabajo en Blender..."
       }
     };
 
@@ -736,7 +783,6 @@
     const langText = langBtn.querySelector('.lang-text');
     const blogEntriesContainer = document.getElementById('blog-entries');
     const loadingSpinner = document.getElementById('loading-spinner');
-    const paginationLinks = document.querySelectorAll('.pagination a, .pagination-link');
     const entriesPerPage = 6;
     const totalEntries = Object.keys(translations.en).filter(key => key.startsWith('entry')).length / 2;
     const totalPages = Math.ceil(totalEntries / entriesPerPage);
@@ -789,8 +835,42 @@
         const descKey = `entry${i}_desc`;
         if (translations[currentLang][titleKey] && translations[currentLang][descKey]) {
           html += `
-            <a href="${i === 1 ? 'https://kuni3d.github.io/devlog/catoBlog.html' : i === 2 ? 'https://kuni3d.github.io/devlog/ganzosBlog.html' : i === 3 ? 'https://kuni3d.github.io/devlog/claireBlog.html' : i === 4 ? 'https://kuni3d.github.io/devlog/botBlog.html' : i === 5 ? 'https://kuni3d.github.io/devlog/proceduraltextBlog.html' : '#.html'}" class="blog-entry">
-              <img src="${i === 1 ? 'environment1.webp' : i === 2 ? 'ganzos1.png' : i === 3 ? 'claire1.png' : i === 4 ? 'bot1.png' : i === 5 ? 'landscape 2.png' : 'render8.png'}" alt="Blog entry ${i}" class="blog-image" onerror="this.src='https://via.placeholder.com/150?text=Entry+${i}'">
+            <a href="${i === 1 ? 'https://kuni3d.github.io/devlog/catoBlog.html' :
+                       i === 2 ? 'https://kuni3d.github.io/devlog/ganzosBlog.html' :
+                       i === 3 ? 'https://kuni3d.github.io/devlog/claireBlog.html' :
+                       i === 4 ? 'https://kuni3d.github.io/devlog/botBlog.html' :
+                       i === 5 ? 'https://kuni3d.github.io/devlog/proceduraltextBlog.html' :
+                       i === 6 ? '#' :
+                       i === 7 ? '#' :
+                       i === 8 ? '#' :
+                       i === 9 ? '#' :
+                       i === 10 ? '#' :
+                       i === 11 ? '#' :
+                       i === 12 ? '#' :
+                       i === 13 ? '#' :
+                       i === 14 ? '#' :
+                       i === 15 ? '#' :
+                       i === 16 ? '#' :
+                       i === 17 ? '#' :
+                       i === 18 ? '#' : '#.html'}" class="blog-entry">
+              <img src="${i === 1 ? 'environment1.webp' :
+                         i === 2 ? 'ganzos1.png' :
+                         i === 3 ? 'claire1.png' :
+                         i === 4 ? 'bot1.png' :
+                         i === 5 ? 'landscape 2.png' :
+                         i === 6 ? 'render8.png' :
+                         i === 7 ? 'nada.jpg' :
+                         i === 8 ? 'nada.jpg' :
+                         i === 9 ? 'nada.jpg' :
+                         i === 10 ? 'nada.jpg' :
+                         i === 11 ? 'nada.jpg' :
+                         i === 12 ? 'nada.jpg' :
+                         i === 13 ? 'nada.jpg' :
+                         i === 14 ? 'nada.jpg' :
+                         i === 15 ? 'nada.jpg' :
+                         i === 16 ? 'nada.jpg' :
+                         i === 17 ? 'nada.jpg' :
+                         i === 18 ? 'nada.jpg' : 'render8.png'}" alt="Blog entry ${i}" class="blog-image" onerror="this.src='https://via.placeholder.com/150?text=Entry+${i}'">
               <div class="blog-text">
                 <h2 data-translate="${titleKey}">${translations[currentLang][titleKey]}</h2>
                 <p data-translate="${descKey}">${translations[currentLang][descKey]}</p>
@@ -814,36 +894,9 @@
 
     function updatePagination(page) {
       console.log(`Updating pagination for page ${page}`);
-      paginationLinks.forEach(link => {
-        link.classList.remove('active');
-        const linkPage = parseInt(link.getAttribute('data-page'));
-        if (linkPage === page) {
-          link.classList.add('active');
-        }
-      });
-
-      const prevArrow = document.querySelector('.prev-arrow');
-      const nextArrow = document.querySelector('.next-arrow');
-      const prevPage = page - 1;
-      const nextPage = page + 1;
-
-      if (prevPage >= 1) {
-        prevArrow.setAttribute('data-page', prevPage);
-        prevArrow.style.display = 'flex';
-      } else {
-        prevArrow.style.display = 'none';
-      }
-
-      if (nextPage <= totalPages) {
-        nextArrow.setAttribute('data-page', nextPage);
-        nextArrow.style.display = 'flex';
-      } else {
-        nextArrow.style.display = 'none';
-      }
-
       const paginationContainer = document.getElementById('pagination');
       let paginationHTML = `
-        <a data-page="${prevPage}" class="prev-arrow" style="display: ${prevPage >= 1 ? 'flex' : 'none'};">
+        <a data-page="${page - 1}" class="prev-arrow" style="display: ${page > 1 ? 'flex' : 'none'};">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
           </svg>
@@ -854,7 +907,7 @@
         paginationHTML += `<a data-page="${i}" class="${i === page ? 'active' : ''}">${i}</a>`;
       }
       paginationHTML += `
-        <a data-page="${nextPage}" class="next-arrow" style="display: ${nextPage <= totalPages ? 'flex' : 'none'};">
+        <a data-page="${page + 1}" class="next-arrow" style="display: ${page < totalPages ? 'flex' : 'none'};">
           <span>Next</span>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
@@ -866,11 +919,11 @@
       document.querySelectorAll('.pagination a').forEach(link => {
         link.addEventListener('click', (e) => {
           e.preventDefault();
-          const page = parseInt(link.getAttribute('data-page'));
-          if (page === 0) return;
-          renderEntries(page);
-          updatePagination(page);
-          updateURL(page);
+          const newPage = parseInt(link.getAttribute('data-page'));
+          if (newPage === 0 || newPage > totalPages) return;
+          renderEntries(newPage);
+          updatePagination(newPage);
+          updateURL(newPage);
         });
       });
     }
