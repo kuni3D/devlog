@@ -5,6 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?display=swap&family=Inter:ital,wght@0,300;1,300&family=Manrope:ital,wght@0,400;1,400" rel="stylesheet" type="text/css" />
+  <link rel="preload" href="pattern.svg" as="image" />
   <style>
     * {
       box-sizing: border-box;
@@ -20,10 +21,9 @@
 
     body {
       position: relative;
-      background: url('pattern.svg'), linear-gradient(180deg, #261F33 0%, #000000 100%);
+      background: url('pattern.svg') repeat, linear-gradient(180deg, #261F33 0%, #000000 100%);
       background-size: 512px, auto;
       background-position: center, center;
-      background-repeat: repeat, no-repeat;
       min-height: 100vh;
       background-color: #1a1a1a;
       color: #fff;
@@ -35,6 +35,8 @@
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
+      background-attachment: fixed;
+      transition: background 0s ease;
     }
 
     body::-webkit-scrollbar {
@@ -51,6 +53,7 @@
       position: relative;
       overflow-y: auto;
       z-index: 1;
+      min-height: 80vh;
     }
 
     html::-webkit-scrollbar {
@@ -86,7 +89,7 @@
       gap: 1.5rem;
       visibility: visible;
       opacity: 1;
-      min-height: 200px;
+      min-height: 200px; /* Restaurado a la altura original */
       overflow-y: auto;
       z-index: 1;
     }
@@ -107,6 +110,37 @@
 
     .blog-entries::-webkit-scrollbar-thumb:hover {
       background-color: rgba(138, 43, 226, 0.7);
+    }
+
+    .loading-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      border-top: 3px solid #5A4C70;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .loading-text {
+      color: #5A4C70;
+      font-family: 'Inter', sans-serif;
+      font-size: 1em;
+      margin-top: 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     .profile-container {
@@ -342,25 +376,6 @@
       font-weight: 300;
     }
 
-    .loading-spinner {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 40px;
-      height: 40px;
-      border: 3px solid rgba(255, 255, 255, 0.2);
-      border-top: 3px solid #5A4C70;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      display: none;
-    }
-
-    @keyframes spin {
-      0% { transform: translate(-50%, -50%) rotate(0deg); }
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-
     .pagination {
       display: flex;
       justify-content: center;
@@ -509,6 +524,7 @@
         padding: 1.5rem;
         width: 100%;
         grid-template-columns: 1fr;
+        min-height: 200px;
       }
 
       .blog-entry {
@@ -583,6 +599,7 @@
 
       .blog-entries {
         padding: 1rem;
+        min-height: 200px;
       }
 
       .blog-text h2 {
@@ -664,7 +681,10 @@
     </a>
 
     <div class="blog-entries" id="blog-entries">
-      <div class="loading-spinner" id="loading-spinner"></div>
+      <div class="loading-container" id="loading-container">
+        <div class="loading-spinner"></div>
+        <span class="loading-text">Cargando...</span>
+      </div>
     </div>
 
     <div class="pagination" id="pagination">
@@ -782,7 +802,7 @@
     const langBtn = document.getElementById('lang-btn');
     const langText = langBtn.querySelector('.lang-text');
     const blogEntriesContainer = document.getElementById('blog-entries');
-    const loadingSpinner = document.getElementById('loading-spinner');
+    const loadingContainer = document.getElementById('loading-container');
     const entriesPerPage = 6;
     const totalEntries = Object.keys(translations.en).filter(key => key.startsWith('entry')).length / 2;
     const totalPages = Math.ceil(totalEntries / entriesPerPage);
@@ -823,8 +843,9 @@
 
     function renderEntries(page) {
       console.log(`Rendering page ${page}`);
-      loadingSpinner.style.display = 'block';
+      loadingContainer.style.display = 'flex'; // Mostrar spinner y texto
       blogEntriesContainer.classList.add('fade');
+      blogEntriesContainer.innerHTML = ''; // Limpiar contenido previo
 
       const start = (page - 1) * entriesPerPage + 1;
       const end = Math.min(start + entriesPerPage - 1, totalEntries);
@@ -884,12 +905,11 @@
         html = '<p>No hay entradas disponibles para esta página.</p>';
       }
 
-      setTimeout(() => {
-        blogEntriesContainer.innerHTML = html;
-        applyTranslations();
-        blogEntriesContainer.classList.remove('fade');
-        loadingSpinner.style.display = 'none';
-      }, 300);
+      // Insertar contenido inmediatamente después de generarlo
+      blogEntriesContainer.innerHTML = html;
+      applyTranslations();
+      blogEntriesContainer.classList.remove('fade');
+      loadingContainer.style.display = 'none';
     }
 
     function updatePagination(page) {
