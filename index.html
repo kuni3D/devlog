@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <title>Mi Portfolio</title>
@@ -6,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?display=swap&family=Inter:ital,wght@0,300;1,300&family=Manrope:ital,wght@0,400;1,400" rel="stylesheet" type="text/css" />
   <link rel="preload" href="pattern.svg" as="image" />
+  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.23.2/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -89,7 +93,7 @@
       gap: 1.5rem;
       visibility: visible;
       opacity: 1;
-      min-height: 200px; /* Restaurado a la altura original */
+      min-height: 200px;
       overflow-y: auto;
       z-index: 1;
     }
@@ -112,30 +116,28 @@
       background-color: rgba(138, 43, 226, 0.7);
     }
 
-    .loading-container {
+    .particle {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      font-size: 1.15em;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 10001;
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
 
-    .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid rgba(255, 255, 255, 0.2);
-      border-top: 3px solid #5A4C70;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
+    .particle.x { color: #767ee1; }
+    .particle.triangle { color: #6be4df; }
+    .particle.square { color: #f69dc8; }
+    .particle.circle { color: #f75f66; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.5); }
+      to { opacity: 0.5; transform: scale(1); }
     }
 
-    .loading-text {
-      color: #5A4C70;
-      font-family: 'Inter', sans-serif;
-      font-size: 1em;
-      margin-top: 1rem;
+    @keyframes fadeOut {
+      from { opacity: 0.5; transform: scale(1); }
+      to { opacity: 0; transform: scale(0.5); }
     }
 
     @keyframes spin {
@@ -143,343 +145,74 @@
       100% { transform: rotate(360deg); }
     }
 
-    .profile-container {
-      display: flex;
-      align-items: flex-start;
-      gap: 3rem;
+    .sidebar-content {
+      transition: opacity 1.2s ease;
+      white-space: nowrap;
     }
 
-    .profile-image {
-      width: 225px;
-      height: 225px;
-      border-radius: 50%;
-      border: 1px solid rgba(0,0,0,0.102);
-      padding: 1.3125rem;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .profile-image:hover {
-      transform: scale(1.05);
-    }
-
-    .profile-text a {
-      text-decoration: none;
-    }
-
-    .profile-text a:hover h3 {
-      text-decoration: underline;
-      color: #8E8E8E;
-    }
-
-    .profile-text h3 {
-      text-transform: uppercase;
-      color: #5E5E5E;
-      font-family: 'Inter', sans-serif;
-      letter-spacing: 0.3rem;
-      font-size: 0.5625em;
-      line-height: 2.25;
-      font-weight: 300;
-      margin-bottom: 1.3125rem;
-    }
-
-    .profile-text h1 {
-      color: #5A4C70;
-      font-family: 'Manrope', sans-serif;
-      letter-spacing: -0.01875rem;
-      font-size: 1.96875em;
-      line-height: 1.5;
-      font-weight: 400;
-      margin-bottom: 1.3125rem;
-      display: inline-block;
-    }
-
-    .profile-text .nickname {
-      font-family: 'Manrope', sans-serif;
-      font-size: 0.3375em;
-      color: #5A4C70;
-      font-weight: 400;
-      margin-left: 0.375rem;
-      vertical-align: baseline;
-    }
-
-    .profile-text p {
-      color: #A0A0A0;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75em;
-      line-height: 1.40625;
-      font-weight: 300;
-    }
-
-    .artstation-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 2rem auto;
-      padding: 0 1.875rem;
-      height: 3.75rem;
-      background-color: #262626;
-      color: #FFFFFF;
-      text-transform: uppercase;
-      font-family: 'Inter', sans-serif;
-      letter-spacing: 0.4rem;
-      font-size: 0.75em;
-      font-weight: 300;
-      border-radius: 2.5rem;
-      text-decoration: none;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-    }
-
-    .artstation-button:hover {
-      background-color: rgba(38,38,38,0.89);
-      transform: translateY(-2px);
-    }
-
-    .artstation-button span {
-      line-height: 1;
-    }
-
-    .home-link {
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      z-index: 1000;
-    }
-
-    .home-link svg {
-      width: 24px;
-      height: 24px;
-      fill: #5A4C70;
-      transition: fill 0.3s ease;
-    }
-
-    .home-link a {
-      color: #5A4C70;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.9em;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-
-    .home-link:hover svg {
-      fill: #8E8E8E;
-    }
-
-    .home-link:hover a {
-      color: #8E8E8E;
-    }
-
-    .language-toggle {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      display: flex;
-      align-items: center;
-      z-index: 1000;
-    }
-
-    .lang-btn {
-      background: linear-gradient(145deg, #2A233A, #1C1726);
-      border: 1px solid #5A4C70;
-      border-radius: 24px;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.1);
-      transition: all 0.3s ease;
-    }
-
-    .lang-btn .lang-text {
-      color: #8E8E8E;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.9em;
-      font-weight: 300;
-      text-transform: uppercase;
-      transition: color 0.3s ease;
-    }
-
-    .lang-btn:hover {
-      background: linear-gradient(145deg, #3A2F4A, #2A233A);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-    }
-
-    .lang-btn:hover .lang-text {
-      color: #fff;
-    }
-
-    .lang-btn:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
-    }
-
-    .blog-entries.fade {
+    .sidebar-content.hidden {
       opacity: 0;
     }
 
-    .blog-entry {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      margin-bottom: 0;
-      text-decoration: none;
-      padding: 0.75rem;
-      border-radius: 6px;
-      transition: background-color 0.3s ease, transform 0.3s ease;
+    .sidebar {
+      display: none;
+      width: 0.1;
+      min-width: 0;
+      overflow: hidden;
+      transition: width 0.5s ease;
+      background-color: #6B46C1;
     }
 
-    .blog-entry:hover {
-      background-color: rgba(255, 255, 255, 0.05);
-      transform: translateY(-3px);
+    .sidebar.open {
+      display: block;
+      width: 200px;
     }
 
-    .blog-entry:hover .blog-text h2 {
-      text-decoration: underline;
+    #root {
+      margin-left: 0;
+      transition: margin-left 0.5s ease;
     }
 
-    .blog-image {
-      width: 150px;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 6px;
-      transition: transform 0.3s ease;
+    #root.with-sidebar {
+      margin-left: 200px;
     }
 
-    .blog-entry:hover .blog-image {
-      transform: scale(1.03);
-    }
-
-    .blog-text {
-      flex: 1;
-    }
-
-    .blog-text h2 {
-      color: #5A4C70;
-      font-family: 'Inter', sans-serif;
-      font-weight: 300;
-      font-size: 0.525em;
-      line-height: 1.25;
-      letter-spacing: 0.375em;
-      margin-bottom: 0.75rem;
-    }
-
-    .blog-text p {
-      color: #A0A0A0;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75em;
-      line-height: 1.40625;
-      font-weight: 300;
-    }
-
-    .pagination {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .pagination a {
-      color: #5A4C70;
-      font-family: 'Inter', sans-serif;
-      font-weight: 300;
-      font-size: 1em;
-      text-decoration: none;
-      padding: 0.5rem 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-      transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    .logo {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 50px;
+      height: 50px;
       cursor: pointer;
+      transition: transform 0.3s ease, left 0.5s ease;
+      z-index: 100;
     }
 
-    .pagination a:hover {
-      background-color: rgba(255, 255, 255, 0.05);
-      color: #8E8E8E;
-      transform: translateY(-2px);
+    .logo.with-sidebar {
+      left: 220px;
     }
 
-    .pagination a.active {
-      background-color: #5A4C70;
-      color: #fff;
-      border-color: #5A4C70;
+    .logo:hover {
+      transform: scale(1.1);
     }
 
-    .pagination .prev-arrow,
-    .pagination .next-arrow {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    .logo2 {
+      position: fixed;
+      top: 80px;
+      left: 20px;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      transition: transform 0.3s ease, left 0.5s ease;
+      z-index: 100;
     }
 
-    .pagination .prev-arrow svg,
-    .pagination .next-arrow svg {
-      width: 12px;
-      height: 12px;
-      fill: #5A4C70;
-      transition: fill 0.3s ease;
+    .logo2.with-sidebar {
+      left: 220px;
     }
 
-    .pagination .prev-arrow:hover svg,
-    .pagination .next-arrow:hover svg {
-      fill: #8E8E8E;
-    }
-
-    .preview-image {
-      width: 16.66%;
-      height: 200px;
-      object-fit: cover;
-      position: absolute;
-      clip-path: polygon(0 0, 30% 0, 100% 100%, 70% 100%);
-      transition: transform 0.3s ease;
-    }
-
-    .preview-image:first-child {
-      object-position: 75% 0%;
-      transform: scale(1);
-    }
-
-    .preview-image:hover {
-      transform: scale(1.05);
-    }
-
-    .preview-image:nth-child(1) { left: 55%; z-index: 6; }
-    .preview-image:nth-child(2) { left: 59%; z-index: 5; }
-    .preview-image:nth-child(3) { left: 63%; z-index: 4; }
-    .preview-image:nth-child(4) { left: 67%; z-index: 3; }
-    .preview-image:nth-child(5) { left: 71%; z-index: 2; }
-    .preview-image:nth-child(6) { left: 75%; z-index: 1; }
-
-    .preview-image:hover {
-      transform: scale(1.05);
-      z-index: 10;
-    }
-
-    .particle {
-      position: absolute;
-      font-size: 1.2em;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 10001;
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-
-    .particle.x { color: #6e6e6e; }
-    .particle.triangle { color: #6e6e6e; }
-    .particle.square { color: #6e6e6e; }
-    .particle.circle { color: #6e6e6e; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.5); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    @keyframes fadeOut {
-      from { opacity: 1; transform: scale(1); }
-      to { opacity: 0; transform: scale(0.5); }
+    .logo2:hover {
+      transform: scale(1.1);
     }
 
     @media (max-width: 736px) {
@@ -543,20 +276,6 @@
         font-size: 0.9em;
       }
 
-      .home-link {
-        top: 0.75rem;
-        left: 0.75rem;
-      }
-
-      .home-link svg {
-        width: 20px;
-        height: 20px;
-      }
-
-      .home-link a {
-        font-size: 0.8em;
-      }
-
       .language-toggle {
         top: 0.75rem;
         right: 0.75rem;
@@ -578,6 +297,36 @@
 
       .preview-image {
         display: none;
+      }
+
+      .sidebar {
+        width: 0 !important;
+      }
+
+      #root {
+        margin-left: 0 !important;
+      }
+
+      .logo {
+        top: 15px;
+        left: 15px;
+        width: 40px;
+        height: 40px;
+      }
+
+      .logo.with-sidebar {
+        left: 215px;
+      }
+
+      .logo2 {
+        top: 65px;
+        left: 15px;
+        width: 40px;
+        height: 40px;
+      }
+
+      .logo2.with-sidebar {
+        left: 215px;
       }
     }
 
@@ -611,20 +360,6 @@
         font-size: 0.8em;
       }
 
-      .home-link {
-        top: 0.5rem;
-        left: 0.5rem;
-      }
-
-      .home-link svg {
-        width: 18px;
-        height: 18px;
-      }
-
-      .home-link a {
-        font-size: 0.75em;
-      }
-
       .language-toggle {
         top: 0.5rem;
         right: 0.5rem;
@@ -637,76 +372,37 @@
       .lang-btn .lang-text {
         font-size: 0.75em;
       }
+
+      .logo {
+        top: 10px;
+        left: 10px;
+        width: 35px;
+        height: 35px;
+      }
+
+      .logo.with-sidebar {
+        left: 210px;
+      }
+
+      .logo2 {
+        top: 55px;
+        left: 10px;
+        width: 35px;
+        height: 35px;
+      }
+
+      .logo2.with-sidebar {
+        left: 210px;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="main">
-    <div class="language-toggle">
-      <button id="lang-btn" class="lang-btn">
-        <span class="lang-text">EN</span>
-      </button>
-    </div>
+  <div id="root"></div>
 
-    <div class="home-link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
-      </svg>
-      <a href="?page=1" class="pagination-link" data-page="1" data-translate="home">Home</a>
-    </div>
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
 
-    <div class="profile-container">
-      <img src="A4.png" alt="Perfil" class="profile-image">
-      <div class="profile-text">
-        <a href="?page=1">
-          <h3 data-translate="devlog">WELCOME</h3>
-        </a>
-        <h1>
-          <span data-translate="greeting">Hi, I'm Alan</span>
-          <span class="nickname" data-translate="nickname">aka Kuni</span>
-        </h1>
-        <p data-translate="bio">DevArtist / 3D Generalist - Modeler & Animator<br/>Character Designer | Props | Environments<br/>Blender, Adobe, Html/Css/Js.</p>
-      </div>
-      <div>
-        <img src="mechito011.png" alt="Preview 1" class="preview-image">
-        <img src="pollito.png" alt="Preview 2" class="preview-image">
-        <img src="bcattpose.png" alt="Preview 3" class="preview-image">
-        <img src="catitomodel.webp" alt="Preview 4" class="preview-image">
-        <img src="razevert.png" alt="Preview 5" class="preview-image">
-        <img src="render8.png" alt="Preview 6" class="preview-image">
-      </div>
-    </div>
-    <a href="http://kuni3d.carrd.co" class="artstation-button">
-      <span data-translate="portfolio">Portfolio</span>
-    </a>
-
-    <div class="blog-entries" id="blog-entries">
-      <div class="loading-container" id="loading-container">
-        <div class="loading-spinner"></div>
-        <span class="loading-text">Cargando...</span>
-      </div>
-    </div>
-
-    <div class="pagination" id="pagination">
-      <a data-page="0" class="prev-arrow" style="display: none;">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
-        </svg>
-        <span>Previous</span>
-      </a>
-      <a data-page="1" class="active">1</a>
-      <a data-page="2">2</a>
-      <a data-page="3">3</a>
-      <a data-page="2" class="next-arrow">
-        <span>Next</span>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
-        </svg>
-      </a>
-    </div>
-  </div>
-
-  <script>
     const translations = {
       en: {
         home: "Home",
@@ -798,214 +494,283 @@
       }
     };
 
-    let currentLang = 'en';
-    const langBtn = document.getElementById('lang-btn');
-    const langText = langBtn.querySelector('.lang-text');
-    const blogEntriesContainer = document.getElementById('blog-entries');
-    const loadingContainer = document.getElementById('loading-container');
     const entriesPerPage = 6;
-    const totalEntries = Object.keys(translations.en).filter(key => key.startsWith('entry')).length / 2;
+    const totalEntries = Object.keys(translations.es).filter(key => key.startsWith('entry')).length / 2;
     const totalPages = Math.ceil(totalEntries / entriesPerPage);
 
-    function applyTranslations() {
-      const translatableElements = document.querySelectorAll('[data-translate]');
-      translatableElements.forEach(element => {
-        const key = element.getAttribute('data-translate');
-        if (translations[currentLang][key]) {
-          if (element.tagName === 'P') {
-            element.innerHTML = translations[currentLang][key];
-          } else {
-            element.textContent = translations[currentLang][key];
-          }
-        }
-      });
-      document.documentElement.lang = currentLang;
-    }
-
-    function toggleLanguage() {
-      currentLang = currentLang === 'en' ? 'es' : 'en';
-      langText.textContent = currentLang.toUpperCase();
-      applyTranslations();
-      const currentPage = getPageFromURL();
-      renderEntries(currentPage);
-    }
-
-    function getPageFromURL() {
-      const params = new URLSearchParams(window.location.search);
-      const page = parseInt(params.get('page')) || 1;
-      return Math.max(1, Math.min(page, totalPages));
-    }
-
-    function updateURL(page) {
-      const newURL = `${window.location.pathname}?page=${page}`;
-      history.pushState({ page: page }, '', newURL);
-    }
-
-    function renderEntries(page) {
-      console.log(`Rendering page ${page}`);
-      loadingContainer.style.display = 'flex'; // Mostrar spinner y texto
-      blogEntriesContainer.classList.add('fade');
-      blogEntriesContainer.innerHTML = ''; // Limpiar contenido previo
-
-      const start = (page - 1) * entriesPerPage + 1;
-      const end = Math.min(start + entriesPerPage - 1, totalEntries);
-      let html = '';
-
-      for (let i = start; i <= end; i++) {
-        const titleKey = `entry${i}_title`;
-        const descKey = `entry${i}_desc`;
-        if (translations[currentLang][titleKey] && translations[currentLang][descKey]) {
-          html += `
-            <a href="${i === 1 ? 'https://kuni3d.github.io/devlog/catoBlog.html' :
-                       i === 2 ? 'https://kuni3d.github.io/devlog/ganzosBlog.html' :
-                       i === 3 ? 'https://kuni3d.github.io/devlog/claireBlog.html' :
-                       i === 4 ? 'https://kuni3d.github.io/devlog/botBlog.html' :
-                       i === 5 ? 'https://kuni3d.github.io/devlog/proceduraltextBlog.html' :
-                       i === 6 ? '#' :
-                       i === 7 ? 'https://kuni3d.github.io/devlog/webBlog.html' :
-                       i === 8 ? '#' :
-                       i === 9 ? '#' :
-                       i === 10 ? '#' :
-                       i === 11 ? '#' :
-                       i === 12 ? '#' :
-                       i === 13 ? '#' :
-                       i === 14 ? '#' :
-                       i === 15 ? '#' :
-                       i === 16 ? '#' :
-                       i === 17 ? '#' :
-                       i === 18 ? '#' : '#.html'}" class="blog-entry">
-              <img src="${i === 1 ? 'environment1.webp' :
-                         i === 2 ? 'ganzos1.png' :
-                         i === 3 ? 'claire1.png' :
-                         i === 4 ? 'bot1.png' :
-                         i === 5 ? 'landscape 2.png' :
-                         i === 6 ? 'render8.png' :
-                         i === 7 ? 'github1.webp' :
-                         i === 8 ? 'nada.jpg' :
-                         i === 9 ? 'nada.jpg' :
-                         i === 10 ? 'nada.jpg' :
-                         i === 11 ? 'nada.jpg' :
-                         i === 12 ? 'nada.jpg' :
-                         i === 13 ? 'nada.jpg' :
-                         i === 14 ? 'nada.jpg' :
-                         i === 15 ? 'nada.jpg' :
-                         i === 16 ? 'nada.jpg' :
-                         i === 17 ? 'nada.jpg' :
-                         i === 18 ? 'nada.jpg' : 'render8.png'}" alt="Blog entry ${i}" class="blog-image" onerror="this.src='https://via.placeholder.com/150?text=Entry+${i}'">
-              <div class="blog-text">
-                <h2 data-translate="${titleKey}">${translations[currentLang][titleKey]}</h2>
-                <p data-translate="${descKey}">${translations[currentLang][descKey]}</p>
+    const Sidebar = ({ isOpen, setIsOpen }) => {
+      return (
+        <div className={`sidebar fixed top-0 left-0 h-full bg-[#6B46C1] z-50 ${isOpen ? 'open' : ''}`}>
+          <div className="h-full flex">
+            <div className="flex-1 p-4">
+              <div className={`sidebar-content ${!isOpen ? 'hidden' : ''}`}>
+                <h2 className="text-lg font-bold mb-4 font-['Inter'] text-white">Menú</h2>
+                <ul>
+                  <li><a href="?page=1" className="text-white hover:underline" data-translate="home">{translations[document.documentElement.lang || 'es'].home}</a></li>
+                  <li><a href="#portfolio" className="text-white hover:underline">Portafolio</a></li>
+                  <li><a href="#about" className="text-white hover:underline whitespace-nowrap">Acerca de</a></li>
+                  <li><a href="#contact" className="text-white hover:underline">Contacto</a></li>
+                </ul>
               </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const BlogEntry = ({ index, lang }) => {
+      const titleKey = `entry${index}_title`;
+      const descKey = `entry${index}_desc`;
+      const links = {
+        1: 'https://kuni3d.github.io/devlog/catoBlog.html',
+        2: 'https://kuni3d.github.io/devlog/ganzosBlog.html',
+        3: 'https://kuni3d.github.io/devlog/claireBlog.html',
+        4: 'https://kuni3d.github.io/devlog/botBlog.html',
+        5: 'https://kuni3d.github.io/devlog/proceduraltextBlog.html',
+        6: '#',
+        7: 'https://kuni3d.github.io/devlog/webBlog.html',
+      };
+      const images = {
+        1: 'environment1.webp',
+        2: 'ganzos1.png',
+        3: 'claire1.png',
+        4: 'bot1.png',
+        5: 'landscape 2.png',
+        6: 'render8.png',
+        7: 'github1.webp',
+      };
+
+      const link = links[index] || '#.html';
+      const image = images[index] || 'render8.png';
+
+      return (
+        <a href={link} className="blog-entry flex items-center gap-6 p-3 rounded-md hover:bg-white/5 hover:-translate-y-1 transition-all">
+          <img
+            src={image}
+            alt={`Entrada del blog ${index}`}
+            className="blog-image w-[150px] h-[150px] object-cover rounded-md hover:scale-103 transition-transform"
+            onError={(e) => e.target.src = `https://via.placeholder.com/150?text=Entrada+${index}`}
+          />
+          <div className="blog-text flex-1">
+            <h2 className="text-[#5A4C70] font-['Inter'] font-light text-[0.525em] tracking-[0.375em] mb-3 hover:underline" data-translate={titleKey}>
+              {translations[lang][titleKey]}
+            </h2>
+            <p className="text-[#A0A0A0] font-['Inter'] text-[0.75em] leading-[1.40625] font-light" data-translate={descKey}>
+              {translations[lang][descKey]}
+            </p>
+          </div>
+        </a>
+      );
+    };
+
+    const App = () => {
+      const [currentLang, setCurrentLang] = useState('es');
+      const [currentPage, setCurrentPage] = useState(1);
+      const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+      const [isLoading, setIsLoading] = useState(true);
+      const [isParticlesEnabled, setIsParticlesEnabled] = useState(true);
+
+      useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const page = parseInt(params.get('page')) || 1;
+        setCurrentPage(Math.max(1, Math.min(page, totalPages)));
+        setIsLoading(false);
+
+        const handlePopState = (e) => {
+          const page = e.state ? e.state.page : parseInt(new URLSearchParams(window.location.search).get('page')) || 1;
+          setCurrentPage(Math.max(1, Math.min(page, totalPages)));
+        };
+
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
+      }, []);
+
+      useEffect(() => {
+        document.documentElement.lang = currentLang;
+        const root = document.getElementById('root');
+        if (isSidebarOpen) {
+          setTimeout(() => {
+            root.className = 'with-sidebar';
+          }, 0);
+        } else {
+          root.className = '';
+        }
+      }, [currentLang, isSidebarOpen]);
+
+      const toggleLanguage = () => {
+        setCurrentLang(currentLang === 'en' ? 'es' : 'en');
+      };
+
+      const handlePageChange = (newPage) => {
+        if (newPage === 0 || newPage > totalPages) return;
+        setIsLoading(true);
+        setCurrentPage(newPage);
+        const newURL = `${window.location.pathname}?page=${newPage}`;
+        window.history.pushState({ page: newPage }, '', newURL);
+        setTimeout(() => setIsLoading(false), 500);
+      };
+
+      const start = (currentPage - 1) * entriesPerPage + 1;
+      const end = Math.min(start + entriesPerPage - 1, totalEntries);
+
+      useEffect(() => {
+        if (!isParticlesEnabled) {
+          return;
+        }
+
+        const handleMouseMove = (e) => {
+          const types = ['x', 'triangle', 'square', 'circle'];
+          const type = types[Math.floor(Math.random() * types.length)];
+          const particle = document.createElement('div');
+          particle.className = `particle ${type}`;
+          particle.innerHTML = type === 'x' ? 'x' : type === 'triangle' ? '△' : type === 'square' ? '□' : 'o';
+          const offsetX = (Math.random() - 0.5) * 30;
+          const offsetY = (Math.random() - 0.5) * 30;
+          particle.style.left = `${e.pageX - 20 + offsetX}px`;
+          particle.style.top = `${e.pageY - 20 + offsetY}px`;
+          particle.style.position = 'absolute';
+          particle.style.zIndex = '10001';
+          document.body.appendChild(particle);
+
+          particle.style.animation = 'fadeIn 0.7s forwards';
+
+          let gravity = -0.1;
+          const fallSpeed = 0.01;
+          const fall = () => {
+            if (particle && particle.style.opacity !== '0') {
+              gravity += fallSpeed;
+              const currentTop = parseFloat(particle.style.top) || e.pageY;
+              particle.style.top = `${currentTop + gravity}px`;
+              requestAnimationFrame(fall);
+            }
+          };
+          requestAnimationFrame(fall);
+
+          setTimeout(() => {
+            particle.style.animation = 'fadeOut 1s forwards';
+            setTimeout(() => particle.remove(), 300);
+          }, 700);
+        };
+
+        document.addEventListener('mousemove', handleMouseMove);
+        return () => document.removeEventListener('mousemove', handleMouseMove);
+      }, [isParticlesEnabled]);
+
+      return (
+        <div id="root">
+          <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+          <div id="main" className="relative">
+            <img
+              src="LogoLow.png"
+              alt="Logo"
+              className={`logo ${isSidebarOpen ? 'with-sidebar' : ''}`}
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            />
+            <img
+              src="LogoLowSimbolos.png"
+              alt="Particle Control"
+              className={`logo2 ${isSidebarOpen ? 'with-sidebar' : ''}`}
+              onClick={() => setIsParticlesEnabled(!isParticlesEnabled)}
+            />
+            <div className="language-toggle fixed top-8 right-4 z-[1000]">
+              <button
+                className="lang-btn bg-gradient-to-br from-[#2A233A] to-[#1C1726] border border-[#5A4C70] rounded-3xl px-4 py-2 flex items-center justify-center shadow-[0_4px_8px_rgba(0,0,0,0.3),inset_0_1px_2px_rgba(255,255,255,0.1)] hover:bg-gradient-to-br hover:from-[#3A2F4A] hover:to-[#2A233A] hover:shadow-[0_6px_12px_rgba(0,0,0,0.4),inset_0_1px_3px_rgba(255,255,255,0.2)] hover:-translate-y-0.5 transition-all"
+                onClick={toggleLanguage}
+              >
+                <span className="lang-text text-[#8E8E8E] font-['Inter'] text-sm uppercase hover:text-white transition-colors">
+                  {currentLang.toUpperCase()}
+                </span>
+              </button>
+            </div>
+
+            <div className="profile-container flex items-start gap-12 max-w-full">
+              <img src="A4.png" alt="Perfil" className="profile-image w-[225px] h-[225px] rounded-full border border-black/10 p-5 object-cover hover:scale-105 transition-transform" />
+              <div className="profile-text">
+                <a href="?page=1">
+                  <h3 className="uppercase text-[#5E5E5E] font-['Inter'] tracking-[0.3rem] text-[0.5625em] leading-[2.25] font-light mb-5" data-translate="devlog">
+                    {translations[currentLang].devlog}
+                  </h3>
+                </a>
+                <h1 className="text-[#5A4C70] font-['Manrope'] tracking-[-0.01875rem] text-[1.96875em] leading-[1.5] font-normal mb-5 inline-block">
+                  <span data-translate="greeting">{translations[currentLang].greeting}</span>
+                  <span className="nickname text-[#5A4C70] font-['Manrope'] text-[0.3375em] font-normal ml-1.5 align-baseline" data-translate="nickname">
+                    {translations[currentLang].nickname}
+                  </span>
+                </h1>
+                <p className="text-[#A0A0A0] font-['Inter'] text-[0.75em] leading-[1.40625] font-light" data-translate="bio" dangerouslySetInnerHTML={{ __html: translations[currentLang].bio }} />
+              </div>
+              <div>
+                {['mechito011.png', 'pollito.png', 'bcattpose.png', 'catitomodel.webp', 'razevert.png', 'render8.png'].map((src, index) => (
+                  <img
+                    key={index}
+                    src={src}
+                    alt={`Vista previa ${index + 1}`}
+                    className={`preview-image absolute w-[16.66%] h-[200px] object-cover hover:scale-105 transition-transform`}
+                    style={{
+                      left: `${55 + index * 4}%`,
+                      zIndex: 6 - index,
+                      clipPath: 'polygon(0 0, 30% 0, 100% 100%, 70% 100%)',
+                      objectPosition: index === 0 ? '75% 0%' : 'center'
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <a href="http://kuni3d.carrd.co" className="artstation-button flex items-center justify-center my-8 mx-auto px-7 h-[3.75rem] bg-[#262626] text-white uppercase font-['Inter'] tracking-[0.4rem] text-[0.75em] font-light rounded-[2.5rem] hover:bg-[#262626]/90 hover:-translate-y-0.5 transition-all">
+              <span data-translate="portfolio">{translations[currentLang].portfolio}</span>
             </a>
-          `;
-        }
-      }
 
-      if (!html) {
-        html = '<p>No hay entradas disponibles para esta página.</p>';
-      }
+            <div className={`blog-entries mt-6 border border-white/10 rounded-xl p-8 shadow-[0_4px_12px_rgba(0,0,0,0.2)] bg-[#121212] grid grid-cols-2 gap-6 transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'} min-h-[200px] overflow-y-auto`}>
+              {isLoading ? (
+                <div className="loading-container absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+                  <div className="loading-spinner w-10 h-10 border-4 border-white/20 border-t-[#5A4C70] rounded-full animate-spin"></div>
+                  <span className="loading-text text-[#5A4C70] font-['Inter'] text-base mt-4">Cargando...</span>
+                </div>
+              ) : (
+                <>
+                  {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(index => (
+                    <BlogEntry key={index} index={index} lang={currentLang} />
+                  ))}
+                </>
+              )}
+            </div>
 
-      // Insertar contenido inmediatamente después de generarlo
-      blogEntriesContainer.innerHTML = html;
-      applyTranslations();
-      blogEntriesContainer.classList.remove('fade');
-      loadingContainer.style.display = 'none';
-    }
+            <div className="pagination flex justify-center gap-4 mt-8">
+              <a
+                className={`prev-arrow flex items-center gap-2 text-[#5A4C70] font-['Inter'] font-light text-base border border-white/10 rounded px-4 py-2 hover:bg-white/5 hover:text-[#8E8E8E] hover:-translate-y-0.5 transition-all ${currentPage <= 1 ? 'hidden' : 'flex'}`}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-3 h-3 fill-[#5A4C70] hover:fill-[#8E8E8E] transition-colors">
+                  <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
+                </svg>
+                <span>Anterior</span>
+              </a>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <a
+                  key={page}
+                  className={`text-[#5A4C70] font-['Inter'] font-light text-base border border-white/10 rounded px-4 py-2 hover:bg-white/5 hover:text-[#8E8E8E] hover:-translate-y-0.5 transition-all ${page === currentPage ? 'bg-[#5A4C70] text-white border-[#5A4C70]' : ''}`}
+                  onClick={() => handlePageChange(page)}
+                >
+                  {page}
+                </a>
+              ))}
+              <a
+                className={`next-arrow flex items-center gap-2 text-[#5A4C70] font-['Inter'] font-light text-base border border-white/10 rounded px-4 py-2 hover:bg-white/5 hover:text-[#8E8E8E] hover:-translate-y-0.5 transition-all ${currentPage >= totalPages ? 'hidden' : 'flex'}`}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                <span>Siguiente</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-3 h-3 fill-[#5A4C70] hover:fill-[#8E8E8E] transition-colors">
+                  <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      );
+    };
 
-    function updatePagination(page) {
-      console.log(`Updating pagination for page ${page}`);
-      const paginationContainer = document.getElementById('pagination');
-      let paginationHTML = `
-        <a data-page="${page - 1}" class="prev-arrow" style="display: ${page > 1 ? 'flex' : 'none'};">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
-          </svg>
-          <span>Previous</span>
-        </a>
-      `;
-      for (let i = 1; i <= totalPages; i++) {
-        paginationHTML += `<a data-page="${i}" class="${i === page ? 'active' : ''}">${i}</a>`;
-      }
-      paginationHTML += `
-        <a data-page="${page + 1}" class="next-arrow" style="display: ${page < totalPages ? 'flex' : 'none'};">
-          <span>Next</span>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
-          </svg>
-        </a>
-      `;
-      paginationContainer.innerHTML = paginationHTML;
-
-      document.querySelectorAll('.pagination a').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const newPage = parseInt(link.getAttribute('data-page'));
-          if (newPage === 0 || newPage > totalPages) return;
-          renderEntries(newPage);
-          updatePagination(newPage);
-          updateURL(newPage);
-        });
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      console.log('DOM loaded, initializing...');
-      const initialPage = getPageFromURL();
-      renderEntries(initialPage);
-      updatePagination(initialPage);
-
-      window.addEventListener('popstate', (e) => {
-        const page = e.state ? e.state.page : getPageFromURL();
-        renderEntries(page);
-        updatePagination(page);
-      });
-
-      langBtn.addEventListener('click', toggleLanguage);
-      toggleLanguage();
-
-      const particles = [];
-      document.addEventListener('mousemove', (e) => {
-        console.log('Mouse moved at:', e.pageX, e.pageY);
-        const types = ['x', 'triangle', 'square', 'circle'];
-        const type = types[Math.floor(Math.random() * types.length)];
-        const particle = document.createElement('div');
-        particle.className = `particle ${type}`;
-        particle.innerHTML = type === 'x' ? '✖' : type === 'triangle' ? '△' : type === 'square' ? '□' : 'o';
-        const offsetX = (Math.random() - 0.5) * 30;
-        const offsetY = (Math.random() - 0.5) * 30;
-        particle.style.left = `${e.pageX - 20 + offsetX}px`;
-        particle.style.top = `${e.pageY - 20 + offsetY}px`;
-        particle.style.position = 'absolute';
-        particle.style.zIndex = '10001';
-        document.body.appendChild(particle);
-
-        requestAnimationFrame(() => {
-          particle.style.animation = 'fadeIn 0.5s forwards';
-        });
-
-        let gravity = -0.1;
-        const fallSpeed = 0.01;
-        function fall() {
-          if (particle && particle.style.opacity !== '0') {
-            gravity += fallSpeed;
-            const currentTop = parseFloat(particle.style.top) || e.pageY;
-            particle.style.top = `${currentTop + gravity}px`;
-            requestAnimationFrame(fall);
-          }
-        }
-        requestAnimationFrame(fall);
-
-        setTimeout(() => {
-          particle.style.animation = 'fadeOut 1s forwards';
-          setTimeout(() => particle.remove(), 300);
-        }, 700);
-
-        particles.push(particle);
-        if (particles.length > 60) {
-          particles.shift().remove();
-        }
-      });
-    });
+    ReactDOM.render(<App />, document.getElementById('root'));
   </script>
 </body>
 </html>
