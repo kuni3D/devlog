@@ -155,17 +155,19 @@
     }
 
     .sidebar {
-      display: none;
-      width: 0.1;
+      display: flex;
+      width: 0;
       min-width: 0;
       overflow: hidden;
       transition: width 0.5s ease;
       background-color: #6B46C1;
+      z-index: 50000;
     }
 
     .sidebar.open {
-      display: block;
+      display: flex;
       width: 200px;
+      z-index: 40000;
     }
 
     #root {
@@ -300,9 +302,7 @@
         display: none;
       }
 
-      .sidebar {
-        width: 0 !important;
-      }
+
 
       #root {
         margin-left: 0 !important;
@@ -501,7 +501,7 @@
 
     const Sidebar = ({ isOpen, setIsOpen }) => {
       return (
-        <div className={`sidebar fixed top-0 left-0 h-full bg-[#6B46C1] z-50 ${isOpen ? 'open' : ''}`}>
+        <div className={`sidebar fixed top-0 left-0 h-full bg-[#6B46C1] z-50 ${isOpen ? 'open flex' : 'flex'}`}>
           <div className="h-full flex">
             <div className="flex-1 p-4">
               <div className={`sidebar-content ${!isOpen ? 'hidden' : ''}`}>
@@ -595,7 +595,7 @@
 
       useEffect(() => {
         document.documentElement.lang = currentLang;
-        const root = document.getElementById('root');
+        const root = document.getElementById('root'); // Corrección aquí
         if (isSidebarOpen) {
           setTimeout(() => {
             root.className = 'with-sidebar';
@@ -778,7 +778,7 @@
       );
     };
 
-    ReactDOM.render(<App />, document.getElementById('root'));
+    ReactDOM.render(<App />, document.getElementById('root')); // Corrección aquí también
   </script>
 </body>
 </html>
