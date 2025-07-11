@@ -216,7 +216,7 @@
     }
 
     @media (max-width: 736px) {
-      .profile-container {
+      .profile-container.mobile-center {
         flex-direction: column;
         justify-content: center;
         align-items: center;
@@ -570,6 +570,13 @@
       const [isSidebarOpen, setIsSidebarOpen] = useState(false);
       const [isLoading, setIsLoading] = useState(true);
       const [isParticlesEnabled, setIsParticlesEnabled] = useState(true);
+      const [isMobile, setIsMobile] = useState(window.innerWidth <= 736);
+
+      useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 736);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+      }, []);
 
       useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -684,7 +691,7 @@
               </button>
             </div>
 
-            <div className="profile-container flex items-start gap-12 max-w-full">
+            <div className={`profile-container flex items-start gap-12 max-w-full ${isMobile ? 'mobile-center' : ''}`}>
               <img src="A4.png" alt="Perfil" className="profile-image w-[225px] h-[225px] rounded-full border border-black/10 p-5 object-cover hover:scale-105 transition-transform" />
               <div className="profile-text">
                 <a href="?page=1">
