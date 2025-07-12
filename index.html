@@ -532,17 +532,17 @@
         7: 'https://kuni3d.github.io/devlog/webBlog.html',
       };
       const images = {
-        1: 'environment1.webp',
-        2: 'ganzos1.png',
-        3: 'claire1.png',
-        4: 'bot1.png',
-        5: 'landscape 2.png',
-        6: 'render8.png',
-        7: 'github1.webp',
+        1: 'public/environment1.webp',
+        2: 'public/ganzos1.png',
+        3: 'public/claire1.png',
+        4: 'public/bot1.png',
+        5: 'public/landscape 2.png',
+        6: 'public/render8.png',
+        7: 'public/github1.webp',
       };
 
       const link = links[index] || '#.html';
-      const image = images[index] || 'render8.png';
+      const image = images[index] || 'public/render8.png';
 
       return (
         <a href={link} className="blog-entry flex items-center gap-6 p-3 rounded-md hover:bg-white/5 hover:-translate-y-1 transition-all">
@@ -669,13 +669,13 @@
           <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
           <div id="main" className="relative">
             <img
-              src="LogoLow.png"
+              src="public/LogoLow.png"
               alt="Logo"
               className={`logo ${isSidebarOpen ? 'with-sidebar' : ''}`}
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             />
             <img
-              src="LogoLowSimbolos.png"
+              src="public/LogoLowSimbolos.png"
               alt="Particle Control"
               className={`logo2 ${isSidebarOpen ? 'with-sidebar' : ''}`}
               onClick={() => setIsParticlesEnabled(!isParticlesEnabled)}
@@ -692,7 +692,7 @@
             </div>
 
             <div className={`profile-container flex items-start gap-12 max-w-full ${isMobile ? 'mobile-center' : ''}`}>
-              <img src="A4.png" alt="Perfil" className="profile-image w-[225px] h-[225px] rounded-full border border-black/10 p-5 object-cover hover:scale-105 transition-transform" />
+              <img src="public/A4.png" alt="Perfil" className="profile-image w-[225px] h-[225px] rounded-full border border-black/10 p-5 object-cover hover:scale-105 transition-transform" />
               <div className="profile-text">
                 <a href="?page=1">
                   <h3 className="uppercase text-[#5E5E5E] font-['Inter'] tracking-[0.3rem] text-[0.5625em] leading-[2.25] font-light mb-5" data-translate="devlog">
@@ -708,7 +708,7 @@
                 <p className="text-[#A0A0A0] font-['Inter'] text-[0.75em] leading-[1.40625] font-light" data-translate="bio" dangerouslySetInnerHTML={{ __html: translations[currentLang].bio }} />
               </div>
               <div>
-                {['mechito011.png', 'pollito.png', 'bcattpose.png', 'catitomodel.webp', 'razevert.png', 'render8.png'].map((src, index) => (
+                {['public/mechito011.png', 'public/pollito.png', 'public/bcattpose.png', 'public/catitomodel.webp', 'public/razevert.png', 'public/render8.png'].map((src, index) => (
                   <img
                     key={index}
                     src={src}
