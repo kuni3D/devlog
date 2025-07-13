@@ -1,9 +1,34 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useAuth0 } from '@auth0/auth0-react'; // Importa el hook de Auth0
 
 // Definiciones fuera del componente
 const translations = {
-  en: { /* tus traducciones en inglés */ },
-  es: { /* tus traducciones en español */ }
+  en: {
+    home: 'Home',
+    devlog: 'DEVLOG',
+    greeting: 'Hello',
+    nickname: 'Kuni3D',
+    bio: '3D Artist & Developer passionate about creating immersive worlds.',
+    portfolio: 'Portfolio',
+    entry1_title: 'Project 1',
+    entry1_desc: 'Description of project 1.',
+    entry2_title: 'Project 2',
+    entry2_desc: 'Description of project 2.',
+    // Agrega más traducciones según necesites
+  },
+  es: {
+    home: 'Inicio',
+    devlog: 'DEVLOG',
+    greeting: 'Hola',
+    nickname: 'Kuni3D',
+    bio: 'Artista 3D y Desarrollador apasionado por crear mundos inmersivos.',
+    portfolio: 'Portafolio',
+    entry1_title: 'Proyecto 1',
+    entry1_desc: 'Descripción del proyecto 1.',
+    entry2_title: 'Proyecto 2',
+    entry2_desc: 'Descripción del proyecto 2.',
+    // Agrega más traducciones según necesites
+  },
 };
 
 const entriesPerPage = 6;
@@ -31,7 +56,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => (
 const BlogEntry = ({ index, lang }) => {
   const titleKey = `entry${index}_title`;
   const descKey = `entry${index}_desc`;
-  const links = { /* tus enlaces */ };
+  const links = {}; // Agrega tus enlaces aquí si los tenés
   const images = {
     1: 'environment1.webp',
     2: 'ganzos1.png',
@@ -66,6 +91,7 @@ const BlogEntry = ({ index, lang }) => {
 };
 
 const App = () => {
+  const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0(); // Hooks de Auth0
   const [currentLang, setCurrentLang] = useState('es');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -222,59 +248,82 @@ const App = () => {
               />
             ))}
           </div>
-          </div>
+        </div>
 
-          <a href="http://kuni3d.carrd.co" className="artstation-button flex items-center justify-center my-8 mx-auto px-7 h-[3.75rem] bg-[#262626] text-white uppercase font-['Inter'] tracking-[0.4rem] text-[0.75em] font-light rounded-[2.5rem] hover:bg-[#262626]/90 hover:-translate-y-0.5 transition-all">
-            <span data-translate="portfolio">{translations[currentLang].portfolio}</span>
+        <a href="http://kuni3d.carrd.co" className="artstation-button flex items-center justify-center my-8 mx-auto px-7 h-[3.75rem] bg-[#262626] text-white uppercase font-['Inter'] tracking-[0.4rem] text-[0.75em] font-light rounded-[2.5rem] hover:bg-[#262626]/90 hover:-translate-y-0.5 transition-all">
+          <span data-translate="portfolio">{translations[currentLang].portfolio}</span>
+        </a>
+
+        <div className={`blog-entries mt-6 border border-white/10 rounded-xl p-8 shadow-[0_4px_12px_rgba(0,0,0,0.2)] bg-[#121212] grid grid-cols-2 gap-6 transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'} min-h-[200px] overflow-y-auto`}>
+          {isLoading ? (
+            <div className="loading-container absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+              <div className="loading-spinner w-10 h-10 border-4 border-white/20 border-t-[#5A4C70] rounded-full animate-spin"></div>
+              <span className="loading-text text-[#5A4C70] font-['Inter'] text-base mt-4">Cargando...</span>
+            </div>
+          ) : (
+            <>
+              {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(index => (
+                <BlogEntry key={index} index={index} lang={currentLang} />
+              ))}
+            </>
+          )}
+        </div>
+
+        <div className="pagination flex justify-center gap-4 mt-8">
+          <a
+            className={`prev-arrow flex items-center gap-2 text-[#5A4C70] font-['Inter'] font-light text-base border border-white/10 rounded px-4 py-2 hover:bg-white/5 hover:text-[#8E8E8E] hover:-translate-y-0.5 transition-all ${currentPage <= 1 ? 'hidden' : 'flex'}`}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-3 h-3 fill-[#5A4C70] hover:fill-[#8E8E8E] transition-colors">
+              <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
+            </svg>
+            <span>Anterior</span>
           </a>
-
-          <div className={`blog-entries mt-6 border border-white/10 rounded-xl p-8 shadow-[0_4px_12px_rgba(0,0,0,0.2)] bg-[#121212] grid grid-cols-2 gap-6 transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'} min-h-[200px] overflow-y-auto`}>
-            {isLoading ? (
-              <div className="loading-container absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-                <div className="loading-spinner w-10 h-10 border-4 border-white/20 border-t-[#5A4C70] rounded-full animate-spin"></div>
-                <span className="loading-text text-[#5A4C70] font-['Inter'] text-base mt-4">Cargando...</span>
-              </div>
-            ) : (
-              <>
-                {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(index => (
-                  <BlogEntry key={index} index={index} lang={currentLang} />
-                ))}
-              </>
-            )}
-          </div>
-
-          <div className="pagination flex justify-center gap-4 mt-8">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
             <a
-              className={`prev-arrow flex items-center gap-2 text-[#5A4C70] font-['Inter'] font-light text-base border border-white/10 rounded px-4 py-2 hover:bg-white/5 hover:text-[#8E8E8E] hover:-translate-y-0.5 transition-all ${currentPage <= 1 ? 'hidden' : 'flex'}`}
-              onClick={() => handlePageChange(currentPage - 1)}
+              key={page}
+              className={`text-[#5A4C70] font-['Inter'] font-light text-base border border-white/10 rounded px-4 py-2 hover:bg-white/5 hover:text-[#8E8E8E] hover:-translate-y-0.5 transition-all ${page === currentPage ? 'bg-[#5A4C70] text-white border-[#5A4C70]' : ''}`}
+              onClick={() => handlePageChange(page)}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-3 h-3 fill-[#5A4C70] hover:fill-[#8E8E8E] transition-colors">
-                <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
-              </svg>
-              <span>Anterior</span>
+              {page}
             </a>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-              <a
-                key={page}
-                className={`text-[#5A4C70] font-['Inter'] font-light text-base border border-white/10 rounded px-4 py-2 hover:bg-white/5 hover:text-[#8E8E8E] hover:-translate-y-0.5 transition-all ${page === currentPage ? 'bg-[#5A4C70] text-white border-[#5A4C70]' : ''}`}
-                onClick={() => handlePageChange(page)}
+          ))}
+          <a
+            className={`next-arrow flex items-center gap-2 text-[#5A4C70] font-['Inter'] font-light text-base border border-white/10 rounded px-4 py-2 hover:bg-white/5 hover:text-[#8E8E8E] hover:-translate-y-0.5 transition-all ${currentPage >= totalPages ? 'hidden' : 'flex'}`}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            <span>Siguiente</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-3 h-3 fill-[#5A4C70] hover:fill-[#8E8E8E] transition-colors">
+              <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
+            </svg>
+          </a>
+        </div>
+
+        {/* Sección de autenticación */}
+        <div className="auth-section fixed top-4 right-4 z-[1000] flex items-center gap-4">
+          {!isAuthenticated && (
+            <button
+              onClick={() => loginWithRedirect()}
+              className="bg-[#5A4C70] text-white px-4 py-2 rounded hover:bg-[#6B46C1] transition-colors"
+            >
+              Iniciar Sesión
+            </button>
+          )}
+          {isAuthenticated && (
+            <div className="flex items-center gap-4">
+              <span className="text-white">Bienvenido, {user.name}</span>
+              <button
+                onClick={() => logout({ returnTo: window.location.origin })}
+                className="bg-[#5A4C70] text-white px-4 py-2 rounded hover:bg-[#6B46C1] transition-colors"
               >
-                {page}
-              </a>
-            ))}
-            <a
-              className={`next-arrow flex items-center gap-2 text-[#5A4C70] font-['Inter'] font-light text-base border border-white/10 rounded px-4 py-2 hover:bg-white/5 hover:text-[#8E8E8E] hover:-translate-y-0.5 transition-all ${currentPage >= totalPages ? 'hidden' : 'flex'}`}
-              onClick={() => handlePageChange(currentPage + 1)}
-            >
-              <span>Siguiente</span>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-3 h-3 fill-[#5A4C70] hover:fill-[#8E8E8E] transition-colors">
-                <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
-              </svg>
-            </a>
-          </div>
+                Cerrar Sesión
+              </button>
+            </div>
+          )}
         </div>
       </div>
-    );
+    </div>
+  );
 };
 
 export default App;
