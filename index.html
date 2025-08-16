@@ -4,6 +4,7 @@
   <title>Mi Portfolio</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="refresh" content="3;url=https://kuni3d.vercel.app/" />
   <link href="https://fonts.googleapis.com/css2?display=swap&family=Inter:ital,wght@0,300;1,300&family=Manrope:ital,wght@0,400;1,400" rel="stylesheet" type="text/css" />
   <link rel="preload" href="pattern.svg" as="image" />
   <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
@@ -11,41 +12,90 @@
   <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.23.2/babel.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-    html {
-      scroll-behavior: smooth;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
+      html {
+        scroll-behavior: smooth;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
 
-    body {
-      position: relative;
-      background: url('pattern.svg') repeat, linear-gradient(180deg, #261F33 0%, #000000 100%);
-      background-size: 512px, auto;
-      background-position: center, center;
-      min-height: 100vh;
-      background-color: #1a1a1a;
-      color: #fff;
-      height: 100%;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-      overflow: visible;
-      user-select: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      background-attachment: fixed;
-      transition: background 0s ease;
-    }
+      body {
+        position: relative;
+        background: url('pattern.svg') repeat, linear-gradient(180deg, #261F33 0%, #000000 100%);
+        background-size: 512px, auto;
+        background-position: center, center;
+        min-height: 100vh;
+        background-color: #1a1a1a;
+        color: #fff;
+        height: 100%;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        overflow: visible;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        background-attachment: fixed;
+        transition: background 0s ease;
+      }
 
-    body::-webkit-scrollbar {
-      display: none;
-    }
+      body::-webkit-scrollbar {
+        display: none;
+      }
+
+      .content-container {
+        position: relative;
+        min-height: 100vh;
+        width: 100%;
+      }
+
+      .blur-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        background: rgba(18, 18, 18, 0.5);
+        z-index: 1;
+      }
+
+      .redirect-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 2;
+      }
+
+      .redirect-text {
+        font-family: 'Inter', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 300;
+        color: #2F4F4F; /* Dark grayish-green */
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 0.2rem;
+        position: relative;
+        z-index: 3;
+        background: transparent;
+      }
+
+      @media (max-width: 736px) {
+        .redirect-text {
+          font-size: 1.5rem;
+        }
+      }
 
     #main {
       background: rgba(18, 18, 18, 0.9);
@@ -399,6 +449,10 @@
   </style>
 </head>
 <body>
+
+
+
+
   <div id="root"></div>
 
   <script type="text/babel">
@@ -780,5 +834,9 @@
 
     ReactDOM.render(<App />, document.getElementById('root')); // Corrección aquí también
   </script>
+  <div class="blur-overlay"></div>
+  <div class="redirect-container">
+    <h1 class="redirect-text">REDIRIGIENDO...</h1>
+</div>
 </body>
 </html>
